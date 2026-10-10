@@ -1,6 +1,7 @@
 // Behaviour shared by every page: theme, copy buttons and install panels.
 import { installPanelHtml, type InstallArgs, type InstallTab } from '../lib/install';
 import type { StashTarget } from '../lib/snippets';
+import { initReveal } from './motion';
 
 const store = {
   get<T>(k: string, fallback: T): T {
@@ -90,13 +91,8 @@ document.addEventListener('click', async (e) => {
     const text = host?.querySelector('code')?.textContent ?? '';
     await copyText(text);
     copy.classList.add('copied');
-    const label = copy.querySelector('span');
-    if (label) label.textContent = 'Copied';
     toast('Copied to clipboard');
-    setTimeout(() => {
-      copy.classList.remove('copied');
-      if (label) label.textContent = 'Copy';
-    }, 1500);
+    setTimeout(() => copy.classList.remove('copied'), 1500);
     return;
   }
 
@@ -111,7 +107,10 @@ document.addEventListener('click', async (e) => {
   if (t.closest('[data-theme-toggle]')) {
     const root = document.documentElement;
     const next = root.dataset.theme === 'light' ? 'dark' : 'light';
+    // Recolor in a single frame: no page-wide color fade, only the toggle icon moves.
+    root.classList.add('theme-switching');
     root.dataset.theme = next;
+    requestAnimationFrame(() => requestAnimationFrame(() => root.classList.remove('theme-switching')));
     document.querySelector<HTMLMetaElement>('meta[name=theme-color]')?.setAttribute('content', next === 'light' ? '#f7f7f5' : '#0e1015');
     try {
       localStorage.setItem('theme', next);
@@ -120,6 +119,19 @@ document.addEventListener('click', async (e) => {
     }
   }
 });
+
+// Input modality: keyboard-initiated actions never animate (see Motion in global.css).
+const setInput = (mode: 'key' | 'pointer') => {
+  if (document.documentElement.dataset.input !== mode) document.documentElement.dataset.input = mode;
+};
+document.addEventListener('pointerdown', () => setInput('pointer'), { capture: true, passive: true });
+document.addEventListener(
+  'keydown',
+  (e) => {
+    if (!['Shift', 'Control', 'Alt', 'Meta'].includes(e.key)) setInput('key');
+  },
+  { capture: true },
+);
 
 // Arrow-key navigation between install tabs.
 document.addEventListener('keydown', (e) => {
@@ -152,3 +164,4 @@ document.addEventListener('change', (e) => {
 });
 
 renderPanels();
+initReveal();

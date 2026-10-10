@@ -60,7 +60,7 @@ const fmt = (iso?: string) => (iso ? new Date(iso).toLocaleDateString('en-US', {
                   <div class="field" style="grid-template-columns:1fr auto;max-width:520px">
                     <code class="field-value">{s.url}</code>
                     <button type="button" class="copy copy-sm" data-copy aria-label={`Copy ${s.name} URL`}>
-                      <span>Copy</span>
+                      <span class="swap"><span class="swap-idle">Copy</span><span class="swap-done">Copied</span></span>
                     </button>
                   </div>
                 </td>
