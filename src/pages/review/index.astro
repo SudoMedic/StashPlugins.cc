@@ -30,7 +30,7 @@ const entries: LedgerEntry[] = [...ledger.entries].reverse();
     <header class="page-head">
       <h1>Community review</h1>
       <p>
-        Nobody owns this list. Every approval, takedown and new reviewer is a vote by several independent people, recorded in a public ledger that anyone can copy and check.{' '}
+        Plugin approvals, takedowns and reviewer changes are decided by votes from registered reviewers and recorded in a public, append-only ledger.{' '}
         {verified.length} of {listed.length} listed plugins are community verified.
       </p>
     </header>
@@ -49,7 +49,7 @@ const entries: LedgerEntry[] = [...ledger.entries].reverse();
           <strong>Count.</strong> A check counts approvals on the latest commit from reviewers whose GitHub accounts are at least {governance.reviewer.minAccountAgeDays} days old. Your own pull request and plugins from a
           repo you own never count. {governance.vetoes === 1 ? 'A single request for changes' : `${governance.vetoes} requests for changes`} from a reviewer blocks it.
         </li>
-        <li><strong>Record.</strong> Once merged, the entry is sealed into the chain. The site updates on the next build.</li>
+        <li><strong>Record.</strong> Once merged, the entry becomes part of the ledger and the site updates on the next build.</li>
       </ol>
 
       <h2>Votes needed</h2>
@@ -76,14 +76,14 @@ const entries: LedgerEntry[] = [...ledger.entries].reverse();
         <em>Changed since review</em> until reviewers approve the new version. A <em>revoke</em> hides a plugin and its install snippets right away, and it keeps them hidden until a new version is approved.
       </p>
 
-      <h2>Why it's like a blockchain</h2>
+      <h2>Ledger integrity</h2>
       <p>
-        Each ledger entry includes the hash of the entry before it. Editing or deleting any past decision changes its hash and breaks every entry after it, so tampering is obvious to anyone holding a copy.
-        Every fork of the repo is a full copy. There are no tokens and no mining. A vote is a signed-in GitHub review, so it's one person, one vote, and no one can buy their way in.
+        Each ledger entry records the SHA-256 hash of the entry before it. Changing or removing an earlier entry changes its hash and invalidates every entry after it, so any copy of the ledger can be
+        checked for tampering. Every clone and fork of the repository holds the full history. Votes are GitHub pull request reviews from registered accounts.
       </p>
       <p>
         Current head: <span class="hash">{ledger.head}</span><br />
-        Check it yourself: download <a href={`${base}ledger.jsonl`}>ledger.jsonl</a> and run <code>npm run ledger -- verify ledger.jsonl</code> from a clone of this repo.
+        To verify, download <a href={`${base}ledger.jsonl`}>ledger.jsonl</a> and run <code>npm run ledger -- verify ledger.jsonl</code> from a clone of this repo.
       </p>
 
       <h2>Reviewers ({ledger.reviewers.length})</h2>
@@ -98,7 +98,7 @@ const entries: LedgerEntry[] = [...ledger.entries].reverse();
         }
       </div>
       <p>
-        Want to help? Open a pull request with <code>npm run ledger -- add-reviewer &lt;your-login&gt; --by &lt;your-login&gt;</code> and say what you'd review. Existing reviewers vote on it.
+        To become a reviewer, open a pull request created with <code>npm run ledger -- add-reviewer &lt;your-login&gt; --by &lt;your-login&gt;</code> and describe your experience. Existing reviewers vote on it.
       </p>
 
       <h2>Needs review</h2>
@@ -119,7 +119,7 @@ const entries: LedgerEntry[] = [...ledger.entries].reverse();
         )
       }
       <p>
-        {plural(unreviewed.length, 'plugin')} have never been reviewed. <a href={`${base}?sort=updated`}>Browse them</a>, pick one you use, and propose an approval.
+        {plural(unreviewed.length, 'plugin')} have not been reviewed yet. Any of them can be proposed for approval from the <a href={`${base}?sort=updated`}>plugin list</a>.
       </p>
 
       <h2 id="ledger">Ledger</h2>

@@ -1,107 +1,131 @@
 # Governance
 
-StashPlugins has no owner who decides what is safe. Every decision is a vote by several independent people, recorded
-in a public, hash-chained ledger that anyone can copy, verify or fork.
+This document describes how plugins, sources and reviewers are approved on StashPlugins, how votes are counted, and
+the repository settings required to enforce the process.
 
-## The ledger
+## Ledger
 
-[`registry/ledger.jsonl`](registry/ledger.jsonl) has one JSON entry per line. Each entry has a `seq`, the `hash` of
-the entry before it (`prev`), and its own `hash`: the SHA-256 of the entry's canonical JSON (keys sorted, `hash`
-left out). Changing or deleting any past entry changes its hash and breaks every later entry.
-`npm run ledger -- verify` checks the whole chain, and CI, the crawler and the site build all refuse an invalid one.
+All review decisions are recorded in [`registry/ledger.jsonl`](registry/ledger.jsonl), one JSON object per line.
+Each entry has a sequence number (`seq`), the hash of the previous entry (`prev`) and its own `hash`, which is the
+SHA-256 of the entry's canonical JSON with keys sorted and the `hash` field omitted. Because each hash depends on the
+one before it, changing or removing an earlier entry invalidates every later entry.
 
-| Entry | Effect |
+`npm run ledger -- verify` checks the full ledger. CI, the crawler and the site build fail if the ledger is invalid.
+
+| Entry type | Effect |
 | --- | --- |
-| `genesis` | First entry; lists the bootstrap reviewers. |
-| `approve` | Pins `source` + package `id` + `sha256`. That exact zip shows as **Community verified**. |
-| `revoke` | With a `sha256`: blocks that version. Without one: blocks every version, including future ones, until a later `approve`. |
-| `add-source` | Crawls an index even if it isn't on the forum list. |
-| `remove-source` | Drops a source and all its plugins from the site (spam, abuse). |
-| `add-reviewer` / `remove-reviewer` | Changes who can vote. |
+| `genesis` | First entry. Lists the initial reviewers. |
+| `approve` | Records a reviewed package version by `source`, package `id` and `sha256`. That version is shown as community verified. |
+| `revoke` | With a `sha256`, blocks that version. Without one, blocks every version of the package, including later ones, until a new `approve`. |
+| `add-source` | Adds a package index to the crawl, whether or not it is on the forum list. |
+| `remove-source` | Removes a source and all of its plugins from the site. |
+| `add-reviewer` / `remove-reviewer` | Changes the set of reviewers whose votes are counted. |
 
-The `sha256` is the one in the source's `index.yml`, and Stash checks the downloaded zip against it before
-installing. If an author ships new code, the hash changes and the plugin shows **Changed since review** until it is
-approved again. Nobody can slip new code in under an old approval.
+The `sha256` recorded in an approval is the value from the source's `index.yml`. Stash verifies downloaded packages
+against that value before installing them. When an author publishes a new version, its hash differs from the
+approved one and the plugin is shown as changed since review until the new version is approved.
+
+## Proposals
+
+A proposal is a pull request that appends entries to the ledger. Entries are created with the ledger CLI:
+
+```sh
+npm run ledger -- inspect <plugin-slug>
+npm run ledger -- approve <plugin-or-source-slug> --by <login> [--note "..."]
+npm run ledger -- revoke <plugin-slug> --by <login> --reason "..." [--all-versions]
+npm run ledger -- add-source <index-url> --by <login> [--note "..."]
+npm run ledger -- remove-source <index-url-or-slug> --by <login> --reason "..."
+npm run ledger -- add-reviewer <login> --by <login> [--note "..."]
+npm run ledger -- remove-reviewer <login> --by <login> --reason "..."
+```
+
+`inspect` downloads the package zip, checks it against the index hash and extracts it to `.cache/review/` for reading.
+A plugin slug is the last segment of the plugin's URL on the site (`/plugins/<slug>/`). The `--by` value must be the
+GitHub login of the pull request author.
 
 ## Voting
 
-1. **Propose.** Run a ledger command and open a pull request with the appended line:
+Reviewers vote with GitHub pull request reviews. An approving review is a vote in favor; a review requesting changes
+is a veto.
 
-   ```sh
-   npm run ledger -- inspect <plugin-slug>                     # download, check sha256, unpack to .cache/review/
-   npm run ledger -- approve <plugin-or-source-slug> --by <you> --note "read all files; no network calls"
-   npm run ledger -- revoke <plugin-slug> --by <you> --reason "sends API key to example.com" [--all-versions]
-   npm run ledger -- add-source <index-url> --by <you>
-   npm run ledger -- remove-source <index-url-or-slug> --by <you> --reason "spam"
-   npm run ledger -- add-reviewer <login> --by <you>
-   ```
+The *Community quorum* workflow evaluates every open pull request and sets the `community-quorum` commit status to
+pending, success or failure. An approval is counted only if all of the following are true:
 
-   Slugs are the last part of a plugin's URL on the site (`/plugins/<slug>/`). `--by` must be your GitHub login,
-   because the vote counter rejects entries signed by anyone other than the pull request's author.
+- The reviewer is in the reviewer set on the base branch. Reviewers added by the same pull request do not count.
+- The reviewer's GitHub account is at least `reviewer.minAccountAgeDays` old.
+- The reviewer is not the author of the pull request.
+- The reviewer does not own the repository of a source the pull request approves, revokes or adds.
+- The approval was given on the pull request's latest commit.
 
-2. **Vote.** Reviewers read the code and leave a GitHub review: **Approve** to vote yes, **Request changes** to veto.
+The status is set to failure if the pull request contains an invalid or out-of-order ledger entry, an entry whose
+`by` does not match the author, more entries than allowed, or a veto. Proposals from accounts younger than
+`proposer.minAccountAgeDays` are rejected.
 
-3. **Count.** The *Community quorum* workflow posts a `community-quorum` status: pending until enough votes are in,
-   success at quorum, failure on a veto or an invalid change. A vote counts only when:
-   - the voter is in the ledger's reviewer set on the base branch (you can't add yourself and vote in one PR),
-   - their GitHub account is at least `reviewer.minAccountAgeDays` old,
-   - they did not open the pull request,
-   - they don't own the repo behind the source being voted on,
-   - the approval is on the pull request's latest commit (pushing anything new resets the votes).
+The workflow runs from the default branch (`pull_request_target`, `workflow_run` and a scheduled run every 30
+minutes). It reads files from the pull request with `git show` and does not check out or execute pull request code,
+so a pull request cannot change the rules used to evaluate it.
 
-4. **Merge.** When the status is green, any maintainer merges. The site picks it up on the next deploy.
+## Quorum
 
-### How many votes
-
-Set in [`registry/governance.json`](registry/governance.json). A pull request needs the highest quorum of anything
-it touches.
+Quorum settings are in [`registry/governance.json`](registry/governance.json). A pull request must meet the highest
+quorum of any change it contains.
 
 | Key | Applies to | Default |
 | --- | --- | --- |
-| `approve` | approving plugin versions | 2 |
-| `revoke` | takedowns, kept low so malware comes down fast | 1 |
-| `add-source` / `remove-source` | sources | 2 |
-| `add-reviewer` / `remove-reviewer` | reviewer set | 2 |
-| `code` | any other file in the repo | 2 |
-| `governance` | `governance.json`, the vote counter, `parse.mjs`, `.github/`, `LICENSE` | 3 |
+| `approve` | Approving package versions | 2 |
+| `revoke` | Revoking package versions | 1 |
+| `add-source`, `remove-source` | Sources | 2 |
+| `add-reviewer`, `remove-reviewer` | The reviewer set | 2 |
+| `code` | Any other file in the repository | 2 |
+| `governance` | `governance.json`, the ledger code, `parse.mjs`, `.github/` and `LICENSE` | 3 |
+
+Revocation has a lower quorum so that a malicious plugin can be removed quickly.
 
 Other settings:
-- `vetoes`: requests for changes from eligible reviewers that block a pull request.
-- `reviewer.minAccountAgeDays`: minimum GitHub account age for a vote to count.
-- `proposer.minAccountAgeDays`: minimum account age to open a proposal at all; this is the anti-spam check.
-- `proposer.maxEntriesPerPullRequest`: maximum ledger entries in one pull request.
-- `listing`: `"all"` lists every plugin with its status. `"verified"` lists and offers install snippets only for
-  community-verified versions.
 
-Every change involves at least two people: the one proposing it and someone else approving it. While the reviewer
-set is smaller than a quorum, the requirement drops to "every eligible reviewer". The one exception is a reviewer's
-own pull request when no other reviewer exists yet. That only happens at bootstrap, and it's visible in the ledger.
+| Key | Meaning |
+| --- | --- |
+| `vetoes` | Number of change requests from eligible reviewers that block a pull request. |
+| `reviewer.minAccountAgeDays` | Minimum GitHub account age for a vote to be counted. |
+| `proposer.minAccountAgeDays` | Minimum GitHub account age to submit a proposal. |
+| `proposer.maxEntriesPerPullRequest` | Maximum number of ledger entries in one pull request. |
+| `listing` | `all` lists every plugin with its review status. `verified` lists and offers install instructions for community verified versions only. |
 
-## Repository settings (one-time, by the owner)
+Every change requires at least two people: the author and one other reviewer. When fewer eligible reviewers exist
+than the configured quorum, the requirement is reduced to the number of eligible reviewers. The only case in which
+no approval is required is a pull request from a reviewer when no other eligible reviewer exists, which can occur only
+while the project is being set up.
 
-The vote counter only binds if GitHub enforces it. On *Settings → Branches → Branch protection rules* for `main`:
+## Repository settings
 
-- **Require status checks to pass:** add `community-quorum` (and `test-and-build`).
-- **Require a pull request before merging**, and **Do not allow bypassing the above settings**, so admins follow
-  the same rules.
-- Disable force pushes and deletions.
+The `community-quorum` status is only binding when GitHub enforces it. The repository owner should configure the
+following under *Settings, Branches* for `main`:
 
-Then:
+- Require status checks to pass before merging: `community-quorum` and `test-and-build`.
+- Require a pull request before merging.
+- Do not allow bypassing the above settings, so that administrators follow the same rules.
+- Block force pushes and branch deletion.
 
-- Keep write access to as few people as possible. Contributors and reviewers work from forks, and reviewers don't
-  need write access to vote. A fork's workflows get a read-only token and can't fake the `community-quorum` status.
-- *Settings → Actions → General → Fork pull request workflows*: require approval for first-time contributors.
-- Add more people to the genesis reviewer set, or add them with `add-reviewer` pull requests, until the reviewer
-  set is larger than the biggest quorum.
+And additionally:
 
-## Why this works (and its limits)
+- Limit write access to maintainers. Contributors and reviewers work from forks; reviewers do not need write access
+  to vote. Workflows triggered from forks receive a read-only token and cannot set the `community-quorum` status.
+- Under *Settings, Actions, General*, require approval for workflow runs from first-time contributors.
+- Add reviewers until the reviewer set is larger than the highest quorum.
 
-- **Tamper-evident.** History lives in git and in the hash chain. Every clone and fork is a full copy that can be
-  checked with `npm run ledger -- verify`, and the published site serves `/ledger.jsonl`.
-- **No tokens or mining.** A vote is a signed-in GitHub review, so it's one account, one vote. Account-age limits,
-  the reviewer set and per-source conflict checks make sock puppets expensive.
-- **Forkable.** Everything is MIT licensed. If the community disagrees with the maintainers, it can fork the repo,
-  ledger included, and carry on with the same history.
-- **Limits.** Reviewers are people and can miss things; "verified" means reviewed, not guaranteed. GitHub is
-  trusted to report who reviewed what. Plugins themselves stay under their authors' licenses; MIT covers this
-  site's code and the ledger.
+## Security model
+
+- The ledger is append-only and hash-chained. Any clone or fork can be verified independently, and the published
+  site serves a copy at `/ledger.jsonl`.
+- Votes are tied to GitHub accounts. Account age requirements, a curated reviewer set and the conflict-of-interest
+  rule limit the effect of throwaway or duplicate accounts.
+- Approvals are bound to exact package hashes, so a later change to a plugin requires a new review.
+- The project and its ledger are MIT licensed and can be forked with their full history.
+
+## Limitations
+
+- A community verified status means that reviewers examined that version. It is not a guarantee that the code is
+  free of defects or malicious behavior.
+- The process relies on GitHub to report pull request reviews and account details accurately.
+- Plugins are distributed by their authors under their own licenses. The MIT License covers this site's code and the
+  ledger.
