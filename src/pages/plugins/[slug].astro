@@ -62,7 +62,7 @@ const canInstall = installable(p);
 const review = p.review;
 const host = p.repoUrl?.includes('codeberg.org') ? 'Codeberg' : 'GitHub';
 const profile = (login?: string) => (login ? `https://github.com/${login}` : undefined);
-const title = `${p.name} — Stash ${p.type === 'theme' ? 'theme' : 'plugin'} by ${p.author.name}`;
+const title = `${p.name} | Stash ${p.type === 'theme' ? 'theme' : 'plugin'} by ${p.author.name}`;
 const description = (p.description ?? `${p.name}, a ${TYPE_LABELS[p.type].toLowerCase()} for Stash.`) + ` Install it from ${p.sourceName}.`;
 ---
 
@@ -116,7 +116,7 @@ const description = (p.description ?? `${p.name}, a ${TYPE_LABELS[p.type].toLowe
           )}
           {review.status === 'changed' && (
             <p>
-              Version <code>{review.version ?? '—'}</code> was approved in <a href={`${base}review/#entry-${review.seq}`}>ledger entry {review.seq}</a>, but the source now serves different code that nobody has reviewed yet.
+              Version <code>{review.version ?? '-'}</code> was approved in <a href={`${base}review/#entry-${review.seq}`}>ledger entry {review.seq}</a>, but the source now serves different code that nobody has reviewed yet.
             </p>
           )}
           {review.status === 'unreviewed' && (
@@ -133,7 +133,7 @@ const description = (p.description ?? `${p.name}, a ${TYPE_LABELS[p.type].toLowe
         <dl class="facts">
           <div><dt>Last updated</dt><dd><time datetime={p.updated} data-ago>{timeAgo(p.updated, Date.parse(catalog.generatedAt))}</time><br /><span class="muted">{shortDate(p.updated)}</span></dd></div>
           <div><dt>First created</dt><dd><time datetime={p.created}>{shortDate(p.created)}</time></dd></div>
-          <div><dt>Version</dt><dd><code>{p.version ?? '—'}</code></dd></div>
+          <div><dt>Version</dt><dd><code>{p.version ?? '-'}</code></dd></div>
           <div><dt>Package id</dt><dd><code>{p.id}</code></dd></div>
           {p.commits && <div><dt>Commits</dt><dd>{p.commits}</dd></div>}
           {p.stars != null && <div><dt>Repo stars</dt><dd>{p.stars}</dd></div>}
@@ -246,7 +246,7 @@ const description = (p.description ?? `${p.name}, a ${TYPE_LABELS[p.type].toLowe
                   <li>
                     <a href={`${base}plugins/${q.slug}/`}>{q.sourceName}</a>
                     <span>
-                      Version {q.version ?? '—'} · updated {shortDate(q.updated)}
+                      Version {q.version ?? '-'} · updated {shortDate(q.updated)}
                     </span>
                   </li>
                 ))}

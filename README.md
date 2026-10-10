@@ -10,7 +10,7 @@ search, filter by type or source, sort by updated/created/name, and copy a snipp
 
 | Field | Where it comes from |
 | --- | --- |
-| Name, description, version, requirements | The source's `index.yml` — the same file Stash reads |
+| Name, description, version, requirements | The source's `index.yml`, the same file Stash reads |
 | Type (UI, theme, tasks & hooks), runtime, settings | The plugin manifest (`<id>.yml`) in the repo, or inside the package zip |
 | Last updated, first created, author, contributors | `git log` of the plugin's folder (`--follow` on the manifest catches moves) |
 | Repo / source links, README | The git repo behind the source URL |
@@ -38,10 +38,10 @@ npm run ledger -- verify                             # check the whole hash chai
 
 Every plugin has four options:
 
-1. **Add source** — name, URL and local path to paste into *Settings → Plugins → Available Plugins → Add Source*.
-2. **GraphQL** — Stash's `installPackages` mutation for `/playground`. Installs directly; no source needed.
-3. **cURL** — the same mutation from a terminal. Users can set their Stash address and API key (kept in their browser only).
-4. **config.yml** — a `plugins.package_sources` entry.
+1. **Add source**: name, URL and local path to paste into *Settings → Plugins → Available Plugins → Add Source*.
+2. **GraphQL**: Stash's `installPackages` mutation for `/playground`. Installs directly; no source needed.
+3. **cURL**: the same mutation from a terminal. Users can set their Stash address and API key (kept in their browser only).
+4. **config.yml**: a `plugins.package_sources` entry.
 
 Required plugins are resolved (same source first, then any source) and added automatically.
 Tick several cards to install them all with one snippet.
@@ -82,10 +82,10 @@ src/pages/               browse page, /plugins/<slug>/, /sources/, /guide/, /plu
 
 GitHub Actions does everything:
 
-- **CI** (`.github/workflows/ci.yml`) — tests and builds every PR from the committed catalog.
-- **Crawl and deploy** (`.github/workflows/deploy.yml`) — on push to `main`, daily at 05:17 UTC, or by hand:
+- **CI** (`.github/workflows/ci.yml`): tests and builds every PR from the committed catalog.
+- **Crawl and deploy** (`.github/workflows/deploy.yml`): on push to `main`, daily at 05:17 UTC, or by hand:
   re-crawls all sources, builds, and publishes to GitHub Pages. If the crawl fails it ships the committed snapshot.
-- **Community quorum** (`.github/workflows/quorum.yml`) — counts reviewer votes on open PRs and posts the
+- **Community quorum** (`.github/workflows/quorum.yml`): counts reviewer votes on open PRs and posts the
   `community-quorum` status. Make it a required check on `main` (see [GOVERNANCE.md](GOVERNANCE.md#repository-settings-one-time-by-the-owner)).
 
 One-time setup: *Settings → Pages → Source: GitHub Actions*. For the custom domain, add `stashplugins.cc` under

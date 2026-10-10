@@ -165,7 +165,7 @@ async function cmdVerify() {
   const { ok, errors, state, head } = verifyLedger(entries);
   if (!ok) die(`ledger is invalid:\n  ${errors.join('\n  ')}`);
   const approved = [...state.approvals.values()].length;
-  log(`✓ ledger ok — head ${head}`);
+  log(`✓ ledger ok, head ${head}`);
   log(`  ${state.reviewers.size} reviewers, ${approved} approved packages, ${state.revocations.size} revoked, ${state.removedSources.size} removed sources`);
 }
 
@@ -194,7 +194,7 @@ async function cmdInspect() {
   log(`\n${p.name} ${live.version ?? ''}`);
   log(`  zip      ${url}`);
   log(`  sha256   ${sha}`);
-  log(`  index    ${live.sha256 ?? '(none)'} ${match ? '✓ matches' : '✗ DOES NOT MATCH — Stash will refuse this zip'}`);
+  log(`  index    ${live.sha256 ?? '(none)'} ${match ? '✓ matches' : '✗ DOES NOT MATCH: Stash will refuse this zip'}`);
   log(`  unpacked ${path.relative(process.cwd(), dir)}`);
   log(`\nRead every file. If it is safe: npm run ledger -- approve ${slug} --by <you>`);
 }
@@ -347,7 +347,7 @@ async function evaluate(pr) {
 function report(r) {
   const lines = [
     `### #${r.pr.number} ${r.pr.title}`,
-    `**${r.state}** — ${r.description}`,
+    `**${r.state}**: ${r.description}`,
     `- Changes: ${r.kinds.join(', ') || 'none'}`,
     `- Approvals needed: ${r.tally.required}${r.tally.required !== r.tally.configured ? ` (configured ${r.tally.configured})` : ''}`,
     `- Counted: ${r.tally.approvers.join(', ') || 'none'}`,

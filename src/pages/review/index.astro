@@ -25,7 +25,7 @@ const TITLES: Record<string, string> = {
 const entries: LedgerEntry[] = [...ledger.entries].reverse();
 ---
 
-<Base title="Community review — StashPlugins" description="How StashPlugins uses community votes and a public, hash-chained ledger to keep malicious plugins and spam out." nav="review">
+<Base title="Community review | StashPlugins" description="How StashPlugins uses community votes and a public, hash-chained ledger to keep malicious plugins and spam out." nav="review">
   <div class="wrap" style="max-width:900px">
     <header class="page-head">
       <h1>Community review</h1>
@@ -109,7 +109,7 @@ const entries: LedgerEntry[] = [...ledger.entries].reverse();
             <ul>
               {changed.map((p) => (
                 <li>
-                  <a href={`${base}plugins/${p.slug}/`}>{p.name}</a> <span class="muted">({p.sourceName}) approved {p.review.version ?? '—'}, now {p.version ?? '—'}</span>
+                  <a href={`${base}plugins/${p.slug}/`}>{p.name}</a> <span class="muted">({p.sourceName}) approved {p.review.version ?? '-'}, now {p.version ?? '-'}</span>
                 </li>
               ))}
             </ul>
@@ -161,7 +161,7 @@ const entries: LedgerEntry[] = [...ledger.entries].reverse();
                   )}
                   {(e.reason || e.note) && <div class="muted">{e.reason ?? e.note}</div>}
                 </td>
-                <td>{e.by ?? '—'}</td>
+                <td>{e.by ?? '-'}</td>
                 <td>{shortDate(e.at)}</td>
                 <td class="hash" title={e.hash}>{e.hash.slice(0, 12)}</td>
               </tr>

@@ -204,10 +204,10 @@ export function verifyLedger(entries) {
 
 /**
  * Review status of one package version.
- *   verified   — this exact sha256 was approved and not revoked since
- *   changed    — an older version was approved; the current one was not
- *   revoked    — this version (or every version) was revoked after its last approval
- *   unreviewed — never approved
+ *   verified:   this exact sha256 was approved and not revoked since
+ *   changed:    an older version was approved; the current one was not
+ *   revoked:    this version (or every version) was revoked after its last approval
+ *   unreviewed: never approved
  */
 export function reviewStatus(state, source, id, sha256) {
   const k = packageKey(source, id);

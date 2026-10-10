@@ -8,7 +8,7 @@ const base = import.meta.env.BASE_URL;
 const example = { id: 'skip-intro', sourceURL: 'https://feederbox826.github.io/plugins/main/index.yml' };
 ---
 
-<Base title="How to install Stash plugins — StashPlugins" description="Four ways to install a community plugin or theme into Stash, from the Settings UI to a single GraphQL call." nav="guide">
+<Base title="How to install Stash plugins | StashPlugins" description="Four ways to install a community plugin or theme into Stash, from the Settings UI to a single GraphQL call." nav="guide">
   <div class="wrap" style="max-width:780px">
     <header class="page-head">
       <h1>How to install</h1>
@@ -24,7 +24,7 @@ const example = { id: 'skip-intro', sourceURL: 'https://feederbox826.github.io/p
 
       <h2>2. GraphQL (fastest)</h2>
       <p>
-        Stash has a built-in <code>installPackages</code> mutation. It takes a package id and its source URL, downloads the zip, checks its SHA-256 and installs it — no source setup needed. Open
+        Stash has a built-in <code>installPackages</code> mutation. It takes a package id and its source URL, downloads the zip, checks its SHA-256 and installs it. No source setup needed. Open
         <code>http://localhost:9999/playground</code>, paste, press ▶:
       </p>
       <Fragment set:html={codeBlock(graphqlSnippet([example]), 'example mutation')} />
@@ -45,7 +45,7 @@ const example = { id: 'skip-intro', sourceURL: 'https://feederbox826.github.io/p
 
       <h2>Where the data comes from</h2>
       <p>
-        Once a day we read every index on the <a href={catalog.forumUrl}>community source list</a> — the same <code>index.yml</code> files Stash reads — and the git history of each plugin's folder for
+        Once a day we read every index on the <a href={catalog.forumUrl}>community source list</a> (the same <code>index.yml</code> files Stash reads) and the git history of each plugin's folder for
         its author and dates. Plugins are third-party code: read the source before you install.
       </p>
       <p>Missing a source? Add it to the forum list and it shows up here on the next refresh.</p>

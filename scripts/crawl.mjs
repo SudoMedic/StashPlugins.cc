@@ -4,7 +4,7 @@
 //   1. Read the source list from discourse.stashapp.cc (falls back to the last
 //      saved list when the forum is unreachable), plus sources the community
 //      ledger added, minus the ones it removed.
-//   2. Download each source's index.yml — the same file Stash reads.
+//   2. Download each source's index.yml, the same file Stash reads.
 //   3. Clone the repo behind each source (blobs > 256k skipped) and, for every
 //      package, find its manifest, README and git history.
 //
@@ -239,7 +239,7 @@ async function findManifest(pkg, ctx) {
   return (await manifestsByName(ctx)).get(pkg.name.toLowerCase());
 }
 
-/** Read the manifest out of the package zip itself — exactly what Stash installs. */
+/** Read the manifest out of the package zip itself, which is exactly what Stash installs. */
 async function manifestFromZip(pkg, indexUrl) {
   const url = new URL(pkg.path, indexUrl).href;
   const res = await fetch(url, { signal: AbortSignal.timeout(30_000) });

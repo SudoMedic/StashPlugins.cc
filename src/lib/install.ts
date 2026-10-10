@@ -78,7 +78,7 @@ export function installPanelHtml(a: InstallArgs): string {
 
   const graphql = panel(
     'graphql',
-    `<p>Open <a href="${esc(stash)}/playground" target="_blank" rel="noopener">${esc(stash)}/playground</a>, paste this and press ▶. Stash downloads and installs in the background — no source needed.</p>
+    `<p>Open <a href="${esc(stash)}/playground" target="_blank" rel="noopener">${esc(stash)}/playground</a>, paste this and press ▶. Stash downloads and installs in the background. No source needed.</p>
     ${codeBlock(graphqlSnippet(a.specs), 'GraphQL mutation')}
     ${a.specs.length > a.names.length ? `<p class="hint">Includes ${a.specs.length - a.names.length} required ${a.specs.length - a.names.length === 1 ? 'dependency' : 'dependencies'}.</p>` : ''}`,
   );

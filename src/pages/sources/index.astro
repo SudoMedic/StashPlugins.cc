@@ -11,11 +11,11 @@ const latest = new Map<string, string>();
 for (const p of catalog.plugins) {
   if (p.updated && (latest.get(p.source) ?? '') < p.updated) latest.set(p.source, p.updated);
 }
-const fmt = (iso?: string) => (iso ? new Date(iso).toLocaleDateString('en-US', { dateStyle: 'medium', timeZone: 'UTC' }) : '—');
+const fmt = (iso?: string) => (iso ? new Date(iso).toLocaleDateString('en-US', { dateStyle: 'medium', timeZone: 'UTC' }) : '-');
 ---
 
 <Base
-  title="Stash plugin sources — every community index"
+  title="Stash plugin sources | every community index"
   description={`All ${sources.length} community plugin sources for Stash, with live status and copyable source URLs.`}
   nav="sources"
 >

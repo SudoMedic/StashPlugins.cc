@@ -14,7 +14,7 @@ const TYPE_SHORT: Record<PluginType, string> = {
 };
 
 export function timeAgo(iso: string | undefined, now = Date.now()): string {
-  if (!iso) return '—';
+  if (!iso) return '-';
   const s = Math.max(0, (now - Date.parse(iso)) / 1000);
   const steps: [number, string][] = [
     [60, 'second'],
@@ -37,7 +37,7 @@ export function timeAgo(iso: string | undefined, now = Date.now()): string {
 }
 
 export function shortDate(iso: string | undefined): string {
-  if (!iso) return '—';
+  if (!iso) return '-';
   return new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' });
 }
 
