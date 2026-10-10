@@ -112,6 +112,7 @@ document.addEventListener('click', async (e) => {
     const root = document.documentElement;
     const next = root.dataset.theme === 'light' ? 'dark' : 'light';
     root.dataset.theme = next;
+    document.querySelector<HTMLMetaElement>('meta[name=theme-color]')?.setAttribute('content', next === 'light' ? '#f7f7f5' : '#0e1015');
     try {
       localStorage.setItem('theme', next);
     } catch {

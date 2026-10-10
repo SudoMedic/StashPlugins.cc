@@ -36,6 +36,7 @@ const updated = new Date(catalog.generatedAt).toLocaleDateString('en-US', { date
         const t = localStorage.getItem('theme');
         if (t) document.documentElement.dataset.theme = t;
         else if (matchMedia('(prefers-color-scheme: light)').matches) document.documentElement.dataset.theme = 'light';
+        if (document.documentElement.dataset.theme === 'light') document.querySelector('meta[name=theme-color]').content = '#f7f7f5';
       } catch {}
     </script>
   </head>
@@ -48,7 +49,7 @@ const updated = new Date(catalog.generatedAt).toLocaleDateString('en-US', { date
           <span>Stash<em>Plugins</em></span>
         </a>
         <nav class="nav" aria-label="Main">
-          <a href={base} aria-current={nav === 'browse' ? 'page' : undefined}>Browse</a>
+          <a href={base} class="nav-browse" aria-current={nav === 'browse' ? 'page' : undefined}>Browse</a>
           <a href={`${base}sources/`} aria-current={nav === 'sources' ? 'page' : undefined}>Sources</a>
           <a href={`${base}review/`} aria-current={nav === 'review' ? 'page' : undefined}>Review</a>
           <a href={`${base}guide/`} class="nav-hide" aria-current={nav === 'guide' ? 'page' : undefined}>How to install</a>

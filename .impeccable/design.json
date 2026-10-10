@@ -1,0 +1,851 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-10T20:45:49.265Z",
+  "title": "Design System: StashPlugins",
+  "extensions": {
+    "colorMeta": {
+      "signal-amber": {
+        "role": "primary",
+        "displayName": "Signal Amber",
+        "cssVar": "--accent / --accent-text / --focus / --t-hybrid (dark)",
+        "canonical": "#f5b041",
+        "oklch": "oklch(80.4% 0.146 75.3)",
+        "tonalRamp": [
+          "oklch(15% 0.073 75.3)",
+          "oklch(26% 0.146 75.3)",
+          "oklch(37% 0.146 75.3)",
+          "oklch(48% 0.146 75.3)",
+          "oklch(60% 0.146 75.3)",
+          "oklch(71% 0.146 75.3)",
+          "oklch(83% 0.146 75.3)",
+          "oklch(95% 0.073 75.3)"
+        ]
+      },
+      "amber-ink": {
+        "role": "primary",
+        "displayName": "Amber Ink",
+        "cssVar": "--accent-ink (both themes)",
+        "canonical": "#1a1306",
+        "oklch": "oklch(19.2% 0.027 82.6)",
+        "tonalRamp": [
+          "oklch(15% 0.013 82.6)",
+          "oklch(26% 0.027 82.6)",
+          "oklch(37% 0.027 82.6)",
+          "oklch(48% 0.027 82.6)",
+          "oklch(60% 0.027 82.6)",
+          "oklch(71% 0.027 82.6)",
+          "oklch(83% 0.027 82.6)",
+          "oklch(95% 0.013 82.6)"
+        ]
+      },
+      "amber-wash": {
+        "role": "primary",
+        "displayName": "Amber Wash",
+        "cssVar": "--accent-soft (dark)",
+        "canonical": "rgb(245 176 65 / 0.12)",
+        "note": "Translucent focus halo; not a surface color."
+      },
+      "workbench-ink": {
+        "role": "neutral",
+        "displayName": "Workbench Ink",
+        "cssVar": "--bg (dark)",
+        "canonical": "#0e1015",
+        "oklch": "oklch(17.3% 0.011 268.1)",
+        "tonalRamp": [
+          "oklch(15% 0.005 268.1)",
+          "oklch(26% 0.011 268.1)",
+          "oklch(37% 0.011 268.1)",
+          "oklch(48% 0.011 268.1)",
+          "oklch(60% 0.011 268.1)",
+          "oklch(71% 0.011 268.1)",
+          "oklch(83% 0.011 268.1)",
+          "oklch(95% 0.005 268.1)"
+        ]
+      },
+      "raised-slate": {
+        "role": "neutral",
+        "displayName": "Raised Slate",
+        "cssVar": "--bg-raised (dark)",
+        "canonical": "#151821",
+        "oklch": "oklch(21% 0.018 270.4)",
+        "tonalRamp": [
+          "oklch(15% 0.009 270.4)",
+          "oklch(26% 0.018 270.4)",
+          "oklch(37% 0.018 270.4)",
+          "oklch(48% 0.018 270.4)",
+          "oklch(60% 0.018 270.4)",
+          "oklch(71% 0.018 270.4)",
+          "oklch(83% 0.018 270.4)",
+          "oklch(95% 0.009 270.4)"
+        ]
+      },
+      "sunken-ink": {
+        "role": "neutral",
+        "displayName": "Sunken Ink",
+        "cssVar": "--bg-sunken (dark)",
+        "canonical": "#0a0c10",
+        "oklch": "oklch(15.4% 0.009 264.3)",
+        "tonalRamp": [
+          "oklch(15% 0.005 264.3)",
+          "oklch(26% 0.009 264.3)",
+          "oklch(37% 0.009 264.3)",
+          "oklch(48% 0.009 264.3)",
+          "oklch(60% 0.009 264.3)",
+          "oklch(71% 0.009 264.3)",
+          "oklch(83% 0.009 264.3)",
+          "oklch(95% 0.005 264.3)"
+        ]
+      },
+      "hover-slate": {
+        "role": "neutral",
+        "displayName": "Hover Slate",
+        "cssVar": "--bg-hover (dark)",
+        "canonical": "#1b1f2a",
+        "oklch": "oklch(24% 0.022 269.1)",
+        "tonalRamp": [
+          "oklch(15% 0.011 269.1)",
+          "oklch(26% 0.022 269.1)",
+          "oklch(37% 0.022 269.1)",
+          "oklch(48% 0.022 269.1)",
+          "oklch(60% 0.022 269.1)",
+          "oklch(71% 0.022 269.1)",
+          "oklch(83% 0.022 269.1)",
+          "oklch(95% 0.011 269.1)"
+        ]
+      },
+      "hairline-slate": {
+        "role": "neutral",
+        "displayName": "Hairline Slate",
+        "cssVar": "--line (dark)",
+        "canonical": "#252a36",
+        "oklch": "oklch(28.5% 0.023 267.2)",
+        "tonalRamp": [
+          "oklch(15% 0.012 267.2)",
+          "oklch(26% 0.023 267.2)",
+          "oklch(37% 0.023 267.2)",
+          "oklch(48% 0.023 267.2)",
+          "oklch(60% 0.023 267.2)",
+          "oklch(71% 0.023 267.2)",
+          "oklch(83% 0.023 267.2)",
+          "oklch(95% 0.012 267.2)"
+        ]
+      },
+      "edge-slate": {
+        "role": "neutral",
+        "displayName": "Edge Slate",
+        "cssVar": "--line-strong (dark)",
+        "canonical": "#343a49",
+        "oklch": "oklch(34.9% 0.027 267.9)",
+        "tonalRamp": [
+          "oklch(15% 0.014 267.9)",
+          "oklch(26% 0.027 267.9)",
+          "oklch(37% 0.027 267.9)",
+          "oklch(48% 0.027 267.9)",
+          "oklch(60% 0.027 267.9)",
+          "oklch(71% 0.027 267.9)",
+          "oklch(83% 0.027 267.9)",
+          "oklch(95% 0.014 267.9)"
+        ]
+      },
+      "chalk": {
+        "role": "neutral",
+        "displayName": "Chalk",
+        "cssVar": "--text (dark)",
+        "canonical": "#e8eaf0",
+        "oklch": "oklch(93.7% 0.008 271.3)",
+        "tonalRamp": [
+          "oklch(15% 0.004 271.3)",
+          "oklch(26% 0.008 271.3)",
+          "oklch(37% 0.008 271.3)",
+          "oklch(48% 0.008 271.3)",
+          "oklch(60% 0.008 271.3)",
+          "oklch(71% 0.008 271.3)",
+          "oklch(83% 0.008 271.3)",
+          "oklch(95% 0.004 271.3)"
+        ]
+      },
+      "fog-grey": {
+        "role": "neutral",
+        "displayName": "Fog Grey",
+        "cssVar": "--text-2 (dark)",
+        "canonical": "#a3a9b8",
+        "oklch": "oklch(73.5% 0.023 268.4)",
+        "tonalRamp": [
+          "oklch(15% 0.011 268.4)",
+          "oklch(26% 0.023 268.4)",
+          "oklch(37% 0.023 268.4)",
+          "oklch(48% 0.023 268.4)",
+          "oklch(60% 0.023 268.4)",
+          "oklch(71% 0.023 268.4)",
+          "oklch(83% 0.023 268.4)",
+          "oklch(95% 0.011 268.4)"
+        ]
+      },
+      "dust-grey": {
+        "role": "neutral",
+        "displayName": "Dust Grey",
+        "cssVar": "--text-3 (dark)",
+        "canonical": "#7f8696",
+        "oklch": "oklch(62% 0.025 266.8)",
+        "tonalRamp": [
+          "oklch(15% 0.013 266.8)",
+          "oklch(26% 0.025 266.8)",
+          "oklch(37% 0.025 266.8)",
+          "oklch(48% 0.025 266.8)",
+          "oklch(60% 0.025 266.8)",
+          "oklch(71% 0.025 266.8)",
+          "oklch(83% 0.025 266.8)",
+          "oklch(95% 0.013 266.8)"
+        ]
+      },
+      "control-slate": {
+        "role": "neutral",
+        "displayName": "Control Slate",
+        "cssVar": "--control-line (dark)",
+        "canonical": "#636a7b",
+        "oklch": "oklch(52.4% 0.028 267.7)",
+        "tonalRamp": [
+          "oklch(15% 0.014 267.7)",
+          "oklch(26% 0.028 267.7)",
+          "oklch(37% 0.028 267.7)",
+          "oklch(48% 0.028 267.7)",
+          "oklch(60% 0.028 267.7)",
+          "oklch(71% 0.028 267.7)",
+          "oklch(83% 0.028 267.7)",
+          "oklch(95% 0.014 267.7)"
+        ]
+      },
+      "verified-mint": {
+        "role": "secondary",
+        "displayName": "Verified Mint",
+        "cssVar": "--ok / --t-backend (dark)",
+        "canonical": "#4ccb8f",
+        "oklch": "oklch(75.6% 0.143 159.3)",
+        "tonalRamp": [
+          "oklch(15% 0.071 159.3)",
+          "oklch(26% 0.143 159.3)",
+          "oklch(37% 0.143 159.3)",
+          "oklch(48% 0.143 159.3)",
+          "oklch(60% 0.143 159.3)",
+          "oklch(71% 0.143 159.3)",
+          "oklch(83% 0.143 159.3)",
+          "oklch(95% 0.071 159.3)"
+        ]
+      },
+      "revoked-coral": {
+        "role": "secondary",
+        "displayName": "Revoked Coral",
+        "cssVar": "--err (dark)",
+        "canonical": "#f0716b",
+        "oklch": "oklch(69.8% 0.158 24.7)",
+        "tonalRamp": [
+          "oklch(15% 0.079 24.7)",
+          "oklch(26% 0.158 24.7)",
+          "oklch(37% 0.158 24.7)",
+          "oklch(48% 0.158 24.7)",
+          "oklch(60% 0.158 24.7)",
+          "oklch(71% 0.158 24.7)",
+          "oklch(83% 0.158 24.7)",
+          "oklch(95% 0.079 24.7)"
+        ]
+      },
+      "ui-cornflower": {
+        "role": "tertiary",
+        "displayName": "Ui Cornflower",
+        "cssVar": "--t-ui (dark)",
+        "canonical": "#7aa7ff",
+        "oklch": "oklch(73.3% 0.137 262.9)",
+        "tonalRamp": [
+          "oklch(15% 0.069 262.9)",
+          "oklch(26% 0.137 262.9)",
+          "oklch(37% 0.137 262.9)",
+          "oklch(48% 0.137 262.9)",
+          "oklch(60% 0.137 262.9)",
+          "oklch(71% 0.137 262.9)",
+          "oklch(83% 0.137 262.9)",
+          "oklch(95% 0.069 262.9)"
+        ]
+      },
+      "theme-orchid": {
+        "role": "tertiary",
+        "displayName": "Theme Orchid",
+        "cssVar": "--t-theme (dark)",
+        "canonical": "#e58bd8",
+        "oklch": "oklch(75.6% 0.146 332.3)",
+        "tonalRamp": [
+          "oklch(15% 0.073 332.3)",
+          "oklch(26% 0.146 332.3)",
+          "oklch(37% 0.146 332.3)",
+          "oklch(48% 0.146 332.3)",
+          "oklch(60% 0.146 332.3)",
+          "oklch(71% 0.146 332.3)",
+          "oklch(83% 0.146 332.3)",
+          "oklch(95% 0.073 332.3)"
+        ]
+      },
+      "burnt-amber": {
+        "role": "primary",
+        "displayName": "Burnt Amber",
+        "cssVar": "--accent / --focus (light)",
+        "canonical": "#c27803",
+        "oklch": "oklch(63.7% 0.14 67.5)",
+        "tonalRamp": [
+          "oklch(15% 0.07 67.5)",
+          "oklch(26% 0.14 67.5)",
+          "oklch(37% 0.14 67.5)",
+          "oklch(48% 0.14 67.5)",
+          "oklch(60% 0.14 67.5)",
+          "oklch(71% 0.14 67.5)",
+          "oklch(83% 0.14 67.5)",
+          "oklch(95% 0.07 67.5)"
+        ]
+      },
+      "deep-ochre": {
+        "role": "primary",
+        "displayName": "Deep Ochre",
+        "cssVar": "--accent-text / --t-hybrid (light)",
+        "canonical": "#965a00",
+        "oklch": "oklch(52.4% 0.116 66.4)",
+        "tonalRamp": [
+          "oklch(15% 0.058 66.4)",
+          "oklch(26% 0.116 66.4)",
+          "oklch(37% 0.116 66.4)",
+          "oklch(48% 0.116 66.4)",
+          "oklch(60% 0.116 66.4)",
+          "oklch(71% 0.116 66.4)",
+          "oklch(83% 0.116 66.4)",
+          "oklch(95% 0.058 66.4)"
+        ]
+      },
+      "amber-wash-light": {
+        "role": "primary",
+        "displayName": "Amber Wash Light",
+        "cssVar": "--accent-soft (light)",
+        "canonical": "rgb(194 120 3 / 0.1)",
+        "note": "Translucent focus halo; not a surface color."
+      },
+      "bench-paper": {
+        "role": "neutral",
+        "displayName": "Bench Paper",
+        "cssVar": "--bg (light)",
+        "canonical": "#f7f7f5",
+        "oklch": "oklch(97.6% 0.003 106.4)",
+        "tonalRamp": [
+          "oklch(15% 0.001 106.4)",
+          "oklch(26% 0.003 106.4)",
+          "oklch(37% 0.003 106.4)",
+          "oklch(48% 0.003 106.4)",
+          "oklch(60% 0.003 106.4)",
+          "oklch(71% 0.003 106.4)",
+          "oklch(83% 0.003 106.4)",
+          "oklch(95% 0.001 106.4)"
+        ]
+      },
+      "paper-white": {
+        "role": "neutral",
+        "displayName": "Paper White",
+        "cssVar": "--bg-raised (light)",
+        "canonical": "#ffffff",
+        "oklch": "oklch(100% 0 89.9)",
+        "tonalRamp": [
+          "oklch(15% 0 89.9)",
+          "oklch(26% 0 89.9)",
+          "oklch(37% 0 89.9)",
+          "oklch(48% 0 89.9)",
+          "oklch(60% 0 89.9)",
+          "oklch(71% 0 89.9)",
+          "oklch(83% 0 89.9)",
+          "oklch(95% 0 89.9)"
+        ]
+      },
+      "sunken-paper": {
+        "role": "neutral",
+        "displayName": "Sunken Paper",
+        "cssVar": "--bg-sunken (light)",
+        "canonical": "#efefec",
+        "oklch": "oklch(95.1% 0.004 106.5)",
+        "tonalRamp": [
+          "oklch(15% 0.002 106.5)",
+          "oklch(26% 0.004 106.5)",
+          "oklch(37% 0.004 106.5)",
+          "oklch(48% 0.004 106.5)",
+          "oklch(60% 0.004 106.5)",
+          "oklch(71% 0.004 106.5)",
+          "oklch(83% 0.004 106.5)",
+          "oklch(95% 0.002 106.5)"
+        ]
+      },
+      "hover-paper": {
+        "role": "neutral",
+        "displayName": "Hover Paper",
+        "cssVar": "--bg-hover (light)",
+        "canonical": "#f1f1ee",
+        "oklch": "oklch(95.7% 0.004 106.5)",
+        "tonalRamp": [
+          "oklch(15% 0.002 106.5)",
+          "oklch(26% 0.004 106.5)",
+          "oklch(37% 0.004 106.5)",
+          "oklch(48% 0.004 106.5)",
+          "oklch(60% 0.004 106.5)",
+          "oklch(71% 0.004 106.5)",
+          "oklch(83% 0.004 106.5)",
+          "oklch(95% 0.002 106.5)"
+        ]
+      },
+      "paper-hairline": {
+        "role": "neutral",
+        "displayName": "Paper Hairline",
+        "cssVar": "--line (light)",
+        "canonical": "#e2e2dd",
+        "oklch": "oklch(91.1% 0.007 106.5)",
+        "tonalRamp": [
+          "oklch(15% 0.003 106.5)",
+          "oklch(26% 0.007 106.5)",
+          "oklch(37% 0.007 106.5)",
+          "oklch(48% 0.007 106.5)",
+          "oklch(60% 0.007 106.5)",
+          "oklch(71% 0.007 106.5)",
+          "oklch(83% 0.007 106.5)",
+          "oklch(95% 0.003 106.5)"
+        ]
+      },
+      "paper-edge": {
+        "role": "neutral",
+        "displayName": "Paper Edge",
+        "cssVar": "--line-strong (light)",
+        "canonical": "#cfcfc8",
+        "oklch": "oklch(85.3% 0.01 106.6)",
+        "tonalRamp": [
+          "oklch(15% 0.005 106.6)",
+          "oklch(26% 0.01 106.6)",
+          "oklch(37% 0.01 106.6)",
+          "oklch(48% 0.01 106.6)",
+          "oklch(60% 0.01 106.6)",
+          "oklch(71% 0.01 106.6)",
+          "oklch(83% 0.01 106.6)",
+          "oklch(95% 0.005 106.6)"
+        ]
+      },
+      "press-ink": {
+        "role": "neutral",
+        "displayName": "Press Ink",
+        "cssVar": "--text (light)",
+        "canonical": "#17181c",
+        "oklch": "oklch(21% 0.008 274.5)",
+        "tonalRamp": [
+          "oklch(15% 0.004 274.5)",
+          "oklch(26% 0.008 274.5)",
+          "oklch(37% 0.008 274.5)",
+          "oklch(48% 0.008 274.5)",
+          "oklch(60% 0.008 274.5)",
+          "oklch(71% 0.008 274.5)",
+          "oklch(83% 0.008 274.5)",
+          "oklch(95% 0.004 274.5)"
+        ]
+      },
+      "graphite": {
+        "role": "neutral",
+        "displayName": "Graphite",
+        "cssVar": "--text-2 (light)",
+        "canonical": "#4d5260",
+        "oklch": "oklch(43.9% 0.024 269.9)",
+        "tonalRamp": [
+          "oklch(15% 0.012 269.9)",
+          "oklch(26% 0.024 269.9)",
+          "oklch(37% 0.024 269.9)",
+          "oklch(48% 0.024 269.9)",
+          "oklch(60% 0.024 269.9)",
+          "oklch(71% 0.024 269.9)",
+          "oklch(83% 0.024 269.9)",
+          "oklch(95% 0.012 269.9)"
+        ]
+      },
+      "pewter": {
+        "role": "neutral",
+        "displayName": "Pewter",
+        "cssVar": "--text-3 (light)",
+        "canonical": "#676c7a",
+        "oklch": "oklch(53.2% 0.023 270)",
+        "tonalRamp": [
+          "oklch(15% 0.011 270)",
+          "oklch(26% 0.023 270)",
+          "oklch(37% 0.023 270)",
+          "oklch(48% 0.023 270)",
+          "oklch(60% 0.023 270)",
+          "oklch(71% 0.023 270)",
+          "oklch(83% 0.023 270)",
+          "oklch(95% 0.011 270)"
+        ]
+      },
+      "control-pewter": {
+        "role": "neutral",
+        "displayName": "Control Pewter",
+        "cssVar": "--control-line (light)",
+        "canonical": "#80848f",
+        "oklch": "oklch(61.4% 0.017 269.9)",
+        "tonalRamp": [
+          "oklch(15% 0.009 269.9)",
+          "oklch(26% 0.017 269.9)",
+          "oklch(37% 0.017 269.9)",
+          "oklch(48% 0.017 269.9)",
+          "oklch(60% 0.017 269.9)",
+          "oklch(71% 0.017 269.9)",
+          "oklch(83% 0.017 269.9)",
+          "oklch(95% 0.009 269.9)"
+        ]
+      },
+      "ui-cobalt": {
+        "role": "tertiary",
+        "displayName": "Ui Cobalt",
+        "cssVar": "--t-ui (light)",
+        "canonical": "#2a5fcc",
+        "oklch": "oklch(51.5% 0.179 262.5)",
+        "tonalRamp": [
+          "oklch(15% 0.08 262.5)",
+          "oklch(26% 0.16 262.5)",
+          "oklch(37% 0.16 262.5)",
+          "oklch(48% 0.16 262.5)",
+          "oklch(60% 0.16 262.5)",
+          "oklch(71% 0.16 262.5)",
+          "oklch(83% 0.16 262.5)",
+          "oklch(95% 0.08 262.5)"
+        ]
+      },
+      "theme-plum": {
+        "role": "tertiary",
+        "displayName": "Theme Plum",
+        "cssVar": "--t-theme (light)",
+        "canonical": "#a1358f",
+        "oklch": "oklch(51.8% 0.175 335.1)",
+        "tonalRamp": [
+          "oklch(15% 0.08 335.1)",
+          "oklch(26% 0.16 335.1)",
+          "oklch(37% 0.16 335.1)",
+          "oklch(48% 0.16 335.1)",
+          "oklch(60% 0.16 335.1)",
+          "oklch(71% 0.16 335.1)",
+          "oklch(83% 0.16 335.1)",
+          "oklch(95% 0.08 335.1)"
+        ]
+      },
+      "backend-green": {
+        "role": "secondary",
+        "displayName": "Backend Green",
+        "cssVar": "--ok / --t-backend (light)",
+        "canonical": "#127650",
+        "oklch": "oklch(50.2% 0.106 161.3)",
+        "tonalRamp": [
+          "oklch(15% 0.053 161.3)",
+          "oklch(26% 0.106 161.3)",
+          "oklch(37% 0.106 161.3)",
+          "oklch(48% 0.106 161.3)",
+          "oklch(60% 0.106 161.3)",
+          "oklch(71% 0.106 161.3)",
+          "oklch(83% 0.106 161.3)",
+          "oklch(95% 0.053 161.3)"
+        ]
+      },
+      "brick-red": {
+        "role": "secondary",
+        "displayName": "Brick Red",
+        "cssVar": "--err (light)",
+        "canonical": "#b42318",
+        "oklch": "oklch(50% 0.182 29.5)",
+        "tonalRamp": [
+          "oklch(15% 0.08 29.5)",
+          "oklch(26% 0.16 29.5)",
+          "oklch(37% 0.16 29.5)",
+          "oklch(48% 0.16 29.5)",
+          "oklch(60% 0.16 29.5)",
+          "oklch(71% 0.16 29.5)",
+          "oklch(83% 0.16 29.5)",
+          "oklch(95% 0.08 29.5)"
+        ]
+      }
+    },
+    "themes": {
+      "default": "dark (:root)",
+      "light": ":root[data-theme='light'], chosen from prefers-color-scheme on first visit and persisted in localStorage via the header toggle",
+      "sharedAcrossThemes": [
+        "--radius",
+        "--radius-sm",
+        "--font",
+        "--mono",
+        "--accent-ink"
+      ]
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Home hero headline only, max 16ch, key words in amber."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Plugin detail titles; page heads use the same treatment capped at 36px."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Section and dialog headings; panel headings at 15px."
+      },
+      "card-title": {
+        "displayName": "Card Title",
+        "purpose": "Plugin names on cards."
+      },
+      "lede": {
+        "displayName": "Lede",
+        "purpose": "Hero subcopy and detail summaries in Fog Grey."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Base text and README prose."
+      },
+      "body-small": {
+        "displayName": "Body Small",
+        "purpose": "Controls, nav, chips, metadata values."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Uppercase term labels in metadata grids and table headers."
+      },
+      "tag": {
+        "displayName": "Tag",
+        "purpose": "Status and type pills."
+      },
+      "mono": {
+        "displayName": "Mono",
+        "purpose": "Snippets, URLs, kbd; only real code."
+      },
+      "hash": {
+        "displayName": "Hash",
+        "purpose": "SHA-256 hashes and source paths."
+      }
+    },
+    "shadows": [
+      {
+        "name": "field-dark",
+        "value": "0 1px 0 rgb(255 255 255 / 0.03) inset, 0 8px 24px -12px rgb(0 0 0 / 0.6)",
+        "purpose": "Hero search field at rest (--shadow, dark)."
+      },
+      {
+        "name": "field-light",
+        "value": "0 1px 2px rgb(0 0 0 / 0.04), 0 8px 24px -16px rgb(0 0 0 / 0.18)",
+        "purpose": "Hero search field at rest (--shadow, light)."
+      },
+      {
+        "name": "focus-halo",
+        "value": "0 0 0 4px var(--accent-soft)",
+        "purpose": "Search field focus."
+      },
+      {
+        "name": "dialog",
+        "value": "0 30px 80px -20px rgb(0 0 0 / 0.6)",
+        "purpose": "Install dialog; backdrop rgb(5 6 10 / 0.6) with blur(3px)."
+      },
+      {
+        "name": "floating-bar",
+        "value": "0 16px 40px -10px rgb(0 0 0 / 0.5)",
+        "purpose": "Selection bar."
+      },
+      {
+        "name": "tab-lift",
+        "value": "0 1px 2px rgb(0 0 0 / 0.25), 0 0 0 1px var(--line)",
+        "purpose": "Selected install tab."
+      },
+      {
+        "name": "selected-ring",
+        "value": "0 0 0 1px var(--accent) inset",
+        "purpose": "Card picked for batch install (with amber border)."
+      }
+    ],
+    "focus": {
+      "value": "outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 4px",
+      "purpose": "Every focusable element; cards take it via :has() on the title link."
+    },
+    "motion": [
+      {
+        "name": "card-border",
+        "value": "border-color 0.15s",
+        "purpose": "Card hover border shift."
+      },
+      {
+        "name": "toast-fade",
+        "value": "opacity 0.2s",
+        "purpose": "Toast show and hide."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "transition: none",
+        "purpose": "All transitions removed under prefers-reduced-motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "compact",
+        "value": "560px",
+        "purpose": "max-width: hides the guide nav link and the search kbd hint."
+      },
+      {
+        "name": "wrap",
+        "value": "720px",
+        "purpose": "min-width: page gutter grows from 16px to 28px."
+      },
+      {
+        "name": "detail",
+        "value": "980px",
+        "purpose": "min-width: detail page splits into main plus a 420px sticky aside."
+      }
+    ],
+    "layout": {
+      "container": "1240px",
+      "gutter": "16px / 28px",
+      "cardGrid": "repeat(auto-fill, minmax(290px, 1fr)), gap 14px",
+      "headerHeight": "60px",
+      "stickyOffset": "80px"
+    }
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The single amber action per card or panel (Install, Install selected).",
+      "html": "<button class=\"ds-btn-primary\" type=\"button\">Install</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 36px; padding: 0 14px; border-radius: var(--radius-sm, 8px); border: 1px solid var(--accent, #f5b041); background: var(--accent, #f5b041); color: var(--accent-ink, #1a1306); font: 600 14px var(--font, system-ui, sans-serif); cursor: pointer; } .ds-btn-primary:hover { background: color-mix(in srgb, var(--accent, #f5b041) 88%, white); } .ds-btn-primary:focus-visible { outline: 2px solid var(--focus, #f5b041); outline-offset: 2px; }"
+    },
+    {
+      "name": "Default Button",
+      "kind": "button",
+      "refersTo": "button",
+      "description": "Neutral raised button for secondary actions (Show more, Clear filters, detail links).",
+      "html": "<button class=\"ds-btn-default\" type=\"button\">Show more</button>",
+      "css": ".ds-btn-default { display: inline-flex; align-items: center; height: 36px; padding: 0 14px; border-radius: var(--radius-sm, 8px); border: 1px solid var(--line-strong, #343a49); background: var(--bg-raised, #151821); color: var(--text, #e8eaf0); font: 500 14px var(--font, system-ui, sans-serif); cursor: pointer; } .ds-btn-default:hover { background: var(--bg-hover, #1b1f2a); } .ds-btn-default:focus-visible { outline: 2px solid var(--focus, #f5b041); outline-offset: 2px; }"
+    },
+    {
+      "name": "Search Field",
+      "kind": "input",
+      "refersTo": "search-input",
+      "description": "The hero search: the one field with a resting shadow; amber border and wash halo on focus.",
+      "html": "<label class=\"ds-search\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"><circle cx=\"11\" cy=\"11\" r=\"7\"/><path d=\"m20 20-3.5-3.5\"/></svg><input placeholder=\"Search plugins and themes\" /><kbd class=\"ds-kbd\">/</kbd></label>",
+      "css": ".ds-search { position: relative; display: block; max-width: 680px; } .ds-search svg { position: absolute; left: 18px; top: 50%; translate: 0 -50%; color: var(--text-3, #7f8696); } .ds-search input { width: 100%; height: 56px; padding: 0 64px 0 50px; font: 17px var(--font, system-ui, sans-serif); color: var(--text, #e8eaf0); background: var(--bg-raised, #151821); border: 1px solid var(--control-line, #636a7b); border-radius: 14px; box-shadow: var(--shadow, 0 1px 0 rgb(255 255 255 / 0.03) inset, 0 8px 24px -12px rgb(0 0 0 / 0.6)); } .ds-search input::placeholder { color: var(--text-3, #7f8696); } .ds-search input:focus { outline: none; border-color: var(--accent, #f5b041); box-shadow: 0 0 0 4px var(--accent-soft, rgb(245 176 65 / 0.12)); } .ds-kbd { position: absolute; right: 16px; top: 50%; translate: 0 -50%; font: 12px var(--mono, ui-monospace, monospace); color: var(--text-3, #7f8696); border: 1px solid var(--line-strong, #343a49); border-bottom-width: 2px; border-radius: 6px; padding: 1px 7px; }"
+    },
+    {
+      "name": "Navigation",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Sticky blurred header with the amber-split wordmark and quiet nav links.",
+      "html": "<header class=\"ds-header\"><a class=\"ds-brand\" href=\"#\">Stash<em>Plugins</em></a><nav class=\"ds-nav\"><a href=\"#\" aria-current=\"page\">Browse</a><a href=\"#\">Sources</a><a href=\"#\">Review</a><a href=\"#\">How to install</a></nav></header>",
+      "css": ".ds-header { display: flex; align-items: center; gap: 20px; height: 60px; padding: 0 28px; background: color-mix(in srgb, var(--bg, #0e1015) 82%, transparent); backdrop-filter: saturate(1.4) blur(12px); border-bottom: 1px solid var(--line, #252a36); font-family: var(--font, system-ui, sans-serif); } .ds-brand { font-weight: 700; letter-spacing: -0.01em; color: var(--text, #e8eaf0); text-decoration: none; } .ds-brand em { font-style: normal; color: var(--accent, #f5b041); } .ds-nav { display: flex; gap: 4px; margin-left: auto; } .ds-nav a { padding: 6px 10px; border-radius: var(--radius-sm, 8px); color: var(--text-2, #a3a9b8); text-decoration: none; font-size: 14px; } .ds-nav a:hover, .ds-nav a[aria-current=\"page\"] { color: var(--text, #e8eaf0); background: var(--bg-hover, #1b1f2a); } .ds-nav a:focus-visible { outline: 2px solid var(--focus, #f5b041); outline-offset: 2px; }"
+    },
+    {
+      "name": "Filter Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Type filters with tabular counts; the pressed state inverts to text-on-text.",
+      "html": "<div class=\"ds-chips\"><button class=\"ds-chip\" aria-pressed=\"true\">All <span>412</span></button><button class=\"ds-chip\" aria-pressed=\"false\">UI <span>180</span></button><button class=\"ds-chip\" aria-pressed=\"false\">Themes <span>64</span></button></div>",
+      "css": ".ds-chips { display: flex; gap: 6px; } .ds-chip { height: 32px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--line, #252a36); background: transparent; color: var(--text-2, #a3a9b8); font: 13px var(--font, system-ui, sans-serif); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; } .ds-chip span { font-variant-numeric: tabular-nums; color: var(--text-3, #7f8696); } .ds-chip[aria-pressed=\"true\"] span { color: inherit; opacity: 0.75; } .ds-chip:hover { border-color: var(--line-strong, #343a49); color: var(--text, #e8eaf0); } .ds-chip[aria-pressed=\"true\"] { background: var(--text, #e8eaf0); border-color: var(--text, #e8eaf0); color: var(--bg, #0e1015); } .ds-chip:focus-visible { outline: 2px solid var(--focus, #f5b041); outline-offset: 2px; }"
+    },
+    {
+      "name": "Tags",
+      "kind": "chip",
+      "refersTo": "tag",
+      "description": "Small status and plugin-type pills; the only place semantic hues appear.",
+      "html": "<div class=\"ds-tags\"><span class=\"ds-tag ds-tag-verified\">Verified</span><span class=\"ds-tag ds-tag-changed\">Changed since review</span><span class=\"ds-tag ds-tag-ui\">UI</span><span class=\"ds-tag ds-tag-theme\">Theme</span><span class=\"ds-tag\">Settings</span><span class=\"ds-tag ds-tag-dup\">+2 sources</span></div>",
+      "css": ".ds-tags { display: flex; flex-wrap: wrap; gap: 5px; font-family: var(--font, system-ui, sans-serif); } .ds-tag { font-size: 11.5px; font-weight: 550; line-height: 20px; padding: 0 8px; border-radius: 999px; background: var(--bg-sunken, #0a0c10); border: 1px solid var(--line, #252a36); color: var(--text-2, #a3a9b8); } .ds-tag-ui { color: var(--t-ui, #7aa7ff); border-color: color-mix(in srgb, var(--t-ui, #7aa7ff) 35%, transparent); } .ds-tag-theme { color: var(--t-theme, #e58bd8); border-color: color-mix(in srgb, var(--t-theme, #e58bd8) 35%, transparent); } .ds-tag-verified { color: var(--ok, #4ccb8f); border-color: color-mix(in srgb, var(--ok, #4ccb8f) 45%, transparent); background: color-mix(in srgb, var(--ok, #4ccb8f) 10%, transparent); } .ds-tag-changed { color: var(--accent-text, #f5b041); border-color: color-mix(in srgb, var(--accent, #f5b041) 40%, transparent); } .ds-tag-dup { color: var(--text-3, #7f8696); border-style: dashed; }"
+    },
+    {
+      "name": "Plugin Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Dense flat card: title, clamped description, metadata strip, author and actions, mono source path.",
+      "html": "<article class=\"ds-card\"><h3>Scene Tagger Plus</h3><p class=\"ds-desc\">Bulk-tag scenes from filename patterns with a preview before anything is written.</p><dl class=\"ds-meta\"><div><dt>Updated</dt><dd>3 days ago</dd></div><div><dt>Created</dt><dd>Mar 2, 2024</dd></div></dl><div class=\"ds-foot\"><span class=\"ds-author\">example-author</span><button class=\"ds-install\" type=\"button\">Install</button></div><div class=\"ds-src\">community/stash-plugins</div></article>",
+      "css": ".ds-card { display: flex; flex-direction: column; gap: 10px; max-width: 320px; padding: 16px 16px 12px; background: var(--bg-raised, #151821); border: 1px solid var(--line, #252a36); border-radius: var(--radius, 12px); color: var(--text, #e8eaf0); font: 15px/1.55 var(--font, system-ui, sans-serif); transition: border-color 0.15s; } .ds-card:hover { border-color: var(--line-strong, #343a49); } .ds-card h3 { margin: 0; font-size: 16px; font-weight: 650; line-height: 1.2; } .ds-desc { margin: 0; color: var(--text-2, #a3a9b8); font-size: 14px; } .ds-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 2px 0 0; padding-top: 10px; border-top: 1px solid var(--line, #252a36); } .ds-meta dd { margin: 0; font-size: 13px; font-variant-numeric: tabular-nums; } .ds-meta dt { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-3, #7f8696); } .ds-foot { display: flex; align-items: center; justify-content: space-between; } .ds-author { font-size: 13px; color: var(--text-2, #a3a9b8); } .ds-install { height: 30px; padding: 0 12px; border-radius: var(--radius-sm, 8px); border: 1px solid var(--accent, #f5b041); background: var(--accent, #f5b041); color: var(--accent-ink, #1a1306); font: 600 13px var(--font, system-ui, sans-serif); cursor: pointer; } .ds-install:hover { background: color-mix(in srgb, var(--accent, #f5b041) 88%, white); } .ds-install:focus-visible { outline: 2px solid var(--focus, #f5b041); outline-offset: 2px; } .ds-src { font: 12px var(--mono, ui-monospace, monospace); color: var(--text-3, #7f8696); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }"
+    },
+    {
+      "name": "Install Tabs and Code Well",
+      "kind": "custom",
+      "refersTo": "tabs",
+      "description": "Signature install panel: segmented tab track over a sunken mono code well with a pinned copy button.",
+      "html": "<div class=\"ds-install-panel\"><div class=\"ds-tabs\" role=\"tablist\"><button role=\"tab\" aria-selected=\"true\">Add source</button><button role=\"tab\" aria-selected=\"false\">GraphQL</button><button role=\"tab\" aria-selected=\"false\">cURL</button><button role=\"tab\" aria-selected=\"false\">config.yml</button></div><div class=\"ds-code\"><button class=\"ds-copy\" type=\"button\"><svg aria-hidden=\"true\" viewBox=\"0 0 16 16\" width=\"14\" height=\"14\"><rect x=\"5.5\" y=\"0.75\" width=\"9.75\" height=\"9.75\" rx=\"1.5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"/><path d=\"M3.5 5.5h-1.75a1 1 0 0 0-1 1v7.75a1 1 0 0 0 1 1h7.75a1 1 0 0 0 1-1v-1.75\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"/></svg>Copy</button><pre><code>mutation { installPackages(type: Plugin, packages: [...]) }</code></pre></div></div>",
+      "css": ".ds-install-panel { display: flex; flex-direction: column; gap: 14px; max-width: 560px; font-family: var(--font, system-ui, sans-serif); } .ds-tabs { display: flex; gap: 2px; padding: 3px; background: var(--bg-sunken, #0a0c10); border: 1px solid var(--line, #252a36); border-radius: 10px; } .ds-tabs button { flex: 1; height: 32px; padding: 0 10px; border: 0; border-radius: 7px; background: transparent; color: var(--text-2, #a3a9b8); font: 550 13px var(--font, system-ui, sans-serif); cursor: pointer; } .ds-tabs button:hover { color: var(--text, #e8eaf0); } .ds-tabs button[aria-selected=\"true\"] { background: var(--bg-raised, #151821); color: var(--text, #e8eaf0); box-shadow: 0 1px 2px rgb(0 0 0 / 0.25), 0 0 0 1px var(--line, #252a36); } .ds-tabs button:focus-visible, .ds-copy:focus-visible { outline: 2px solid var(--focus, #f5b041); outline-offset: 2px; } .ds-code { position: relative; background: var(--bg-sunken, #0a0c10); border: 1px solid var(--line, #252a36); border-radius: var(--radius-sm, 8px); } .ds-code pre { margin: 0; padding: 14px 90px 14px 16px; overflow-x: auto; color: var(--text, #e8eaf0); font: 0.86em/1.6 var(--mono, ui-monospace, monospace); } .ds-copy { position: absolute; top: 8px; right: 8px; display: inline-flex; align-items: center; gap: 5px; height: 28px; padding: 0 10px; border-radius: 6px; border: 1px solid var(--line-strong, #343a49); background: var(--bg-raised, #151821); color: var(--text-2, #a3a9b8); font: 550 12px var(--font, system-ui, sans-serif); cursor: pointer; } .ds-copy:hover { color: var(--text, #e8eaf0); }"
+    },
+    {
+      "name": "Selection Bar",
+      "kind": "custom",
+      "refersTo": "selection-bar",
+      "description": "Inverted floating pill for batch install, with ghost and primary pill buttons.",
+      "html": "<div class=\"ds-cart\"><span>3 selected</span><button class=\"ds-cart-ghost\" type=\"button\">Clear</button><button class=\"ds-cart-primary\" type=\"button\">Install selected</button></div>",
+      "css": ".ds-cart { display: inline-flex; align-items: center; gap: 12px; padding: 8px 8px 8px 16px; background: var(--text, #e8eaf0); color: var(--bg, #0e1015); border-radius: 999px; box-shadow: 0 16px 40px -10px rgb(0 0 0 / 0.5); font: 550 14px var(--font, system-ui, sans-serif); } .ds-cart button { height: 32px; padding: 0 12px; border-radius: 999px; font: 13px var(--font, system-ui, sans-serif); cursor: pointer; } .ds-cart-ghost { background: transparent; color: var(--bg, #0e1015); border: 1px solid color-mix(in srgb, var(--bg, #0e1015) 30%, transparent); font-weight: 500; } .ds-cart-primary { background: var(--accent, #f5b041); border: 1px solid var(--accent, #f5b041); color: var(--accent-ink, #1a1306); font-weight: 600; } .ds-cart-primary:hover { background: color-mix(in srgb, var(--accent, #f5b041) 88%, white); } .ds-cart button:focus-visible { outline: 2px solid var(--focus, #f5b041); outline-offset: 2px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Workbench Index",
+    "overview": "StashPlugins is a quiet, dense tool surface. It is meant to sit in a tab next to someone's Stash instance and answer three questions fast: what is this plugin, can I trust this exact version, and how do I install it. The default world is a dark workbench (Workbench Ink, with slightly lifted Raised Slate surfaces and recessed Sunken Ink wells), lit by a single signal color, Signal Amber. Everything else is neutral, so amber always means \"act here\" or \"this is the brand\".\n\nDensity is a feature. Cards carry a title, a clamped description, a tag row, a two-column metadata strip and an action row inside 16px of padding; grids pack at 290px minimum with 14px gutters. Hierarchy comes from tone (three text greys), weight and hairlines, not from size jumps or decoration. Mono type is reserved for things a user will actually paste or verify: install snippets, source URLs, package hashes, keyboard hints.\n\nA light theme mirrors the same structure on warm paper neutrals with a darker Burnt Amber, chosen from `prefers-color-scheme` and persisted via the header toggle. Both themes share radii, spacing and component geometry; only the tone tokens swap.",
+    "keyCharacteristics": [
+      "Dark workbench by default, warm paper light theme with identical structure.",
+      "One signal color (amber) for primary action, focus, selection and the brand mark.",
+      "Flat tonal layering; soft shadows only on the search field, dialog and floating selection bar.",
+      "Hairline borders define every container.",
+      "Mono only for real code, URLs and hashes.",
+      "Status colors (mint, coral) and plugin-type hues live only inside small tags, dots and rails."
+    ],
+    "rules": [
+      {
+        "name": "The One Signal Rule",
+        "body": "Amber is the only accent. It marks the primary action, focus, selection and the brand; it never fills a large surface or decorates a heading for its own sake.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tag-Scale Rule",
+        "body": "Status and plugin-type hues appear only as tag text, tag borders, 7px dots and 3px review rails. They never color a card, a button or body text.",
+        "section": "colors"
+      },
+      {
+        "name": "The Control Edge Rule",
+        "body": "Anything you type into or pick from (text fields, selects) is outlined in the control-line tone, not a hairline, so its boundary is visible at 3:1 on every surface.",
+        "section": "colors"
+      },
+      {
+        "name": "The Inversion Rule",
+        "body": "Transient, floating feedback (the selection bar, the toast) and the selected filter chip invert to text-on-text: a Chalk (or Press Ink) fill with background-colored type. Inversion means \"this is the active state\", not amber.",
+        "section": "colors"
+      },
+      {
+        "name": "The Real-Code Rule",
+        "body": "Mono is for strings a user will paste, compare or verify (snippets, URLs, SHA-256 hashes, key hints). Never set labels, numbers or headings in mono for flavor.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tabular Numbers Rule",
+        "body": "Counts, dates and stats use `font-variant-numeric: tabular-nums` so columns of figures do not jitter as filters change.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat-By-Default Rule",
+        "body": "Cards, panels, tables and fields sit flat with a hairline. A shadow means the element floats above the page or is the primary input; nothing else earns one.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Hairline-Not-Shadow Rule",
+        "body": "Card hover strengthens the border (Hairline to Edge); card selection is an amber border plus a 1px inset amber ring. Neither adds a drop shadow.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do keep Signal Amber (Burnt Amber in light) to primary actions, focus, selection and the brand mark.",
+      "Do build depth with the bg, bg-raised and bg-sunken tones plus 1px hairlines before reaching for a shadow.",
+      "Do put code, URLs and hashes in wells (Sunken Ink, 8px radius) with a copy button.",
+      "Do use `tabular-nums` for every count, date and stat.",
+      "Do define both themes for any new color token; components read only the CSS custom properties, never literal hex.",
+      "Do use inline SVG icons drawn with `currentColor`.",
+      "Do keep touch targets at about 44px on coarse pointers by growing the hit area, not the visual control."
+    ],
+    "donts": [
+      "Don't introduce a second accent hue or use status and plugin-type colors outside tags, dots and rails.",
+      "Don't add drop shadows to cards, panels or tables; hover and selection are border changes.",
+      "Don't set non-code text in mono.",
+      "Don't pill-shape buttons in page content; pills are for chips, tags, people and floating feedback.",
+      "Don't border text fields or selects with the hairline; use the control-line tone.",
+      "Don't set small amber text with `--accent`; use `--accent-text` so it holds contrast in the light theme."
+    ]
+  }
+}
