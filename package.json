@@ -1,6 +1,17 @@
 {
   "name": "stashplugins",
+  "version": "1.0.0",
+  "description": "Searchable directory of community plugins and themes for Stash, with community review",
   "private": true,
+  "license": "MIT",
+  "homepage": "https://stashplugins.cc",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SudoMedic/StashPlugins.cc.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SudoMedic/StashPlugins.cc/issues"
+  },
   "type": "module",
   "scripts": {
     "crawl": "node scripts/crawl.mjs",
@@ -18,6 +29,5 @@
     "marked": "^18.1.0",
     "sanitize-html": "^2.18.0",
     "yaml": "^2.9.1"
-  },
-  "license": "MIT"
+  }
 }
