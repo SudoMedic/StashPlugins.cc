@@ -46,7 +46,9 @@ jobs:
 
       - name: Build
         env:
-          SITE_URL: ${{ steps.pages.outputs.origin }}
+          # Pinned so canonical/og links always name the public domain, never the
+          # github.io address (which carries the account name).
+          SITE_URL: https://stashplugins.cc
           BASE_PATH: ${{ steps.pages.outputs.base_path }}/
         run: npm run build
 
