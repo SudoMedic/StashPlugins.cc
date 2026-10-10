@@ -250,12 +250,15 @@ async function accounts(logins) {
   for (const l of logins) {
     const k = l.toLowerCase();
     if (accountCache.has(k)) continue;
-    try {
-      const u = await gh.json(`/users/${encodeURIComponent(l)}`);
-      accountCache.set(k, { createdAt: u.created_at, type: u.type });
-    } catch {
-      accountCache.set(k, {});
-    }
+    // A failed lookup must not quietly shrink the reviewer pool (and with it the
+    // quorum), so only a deleted account (404) is treated as unable to vote.
+    const res = await fetch(`https://api.github.com/users/${encodeURIComponent(l)}`, {
+      headers: { accept: 'application/vnd.github+json', authorization: `Bearer ${gh.token}` },
+      signal: AbortSignal.timeout(30_000),
+    });
+    if (res.status === 404) accountCache.set(k, {});
+    else if (!res.ok) throw new Error(`GitHub user lookup for ${l} failed: HTTP ${res.status}`);
+    else accountCache.set(k, { createdAt: (await res.json()).created_at });
   }
   return accountCache;
 }
