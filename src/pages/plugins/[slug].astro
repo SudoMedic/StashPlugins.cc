@@ -15,7 +15,7 @@ import {
   type Plugin,
 } from '../../lib/catalog';
 import { installPanelHtml } from '../../lib/install';
-import { avatar, shortDate, timeAgo } from '../../lib/render';
+import { avatar, checkIcon, shortDate, timeAgo } from '../../lib/render';
 import type { SourceRef } from '../../lib/snippets';
 
 export function getStaticPaths() {
@@ -95,7 +95,7 @@ const description = (p.description ?? `${p.name}, a ${TYPE_LABELS[p.type].toLowe
           {p.tags.includes('css') && p.type !== 'theme' && <span class="tag">CSS</span>}
           {p.tags.includes('settings') && <span class="tag">Settings</span>}
           {source.archived && <span class="tag">Archived repo</span>}
-          {review.status === 'verified' && <span class="tag tag-verified">✓ Verified</span>}
+          {review.status === 'verified' && <span class="tag tag-verified"><Fragment set:html={checkIcon} />Verified</span>}
           {review.status === 'changed' && <span class="tag tag-changed">Changed since review</span>}
           {review.status === 'revoked' && <span class="tag tag-revoked">Revoked</span>}
         </div>

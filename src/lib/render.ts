@@ -41,6 +41,9 @@ export function shortDate(iso: string | undefined): string {
   return new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' });
 }
 
+export const checkIcon =
+  '<svg class="ico" aria-hidden="true" viewBox="0 0 16 16" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5 6.5 12 13 4.5"/></svg>';
+
 export function avatar(login: string | undefined, size = 40) {
   return login ? `https://github.com/${encodeURIComponent(login)}.png?size=${size}` : '';
 }
@@ -49,7 +52,7 @@ export function cardHtml(p: ListItem, base: string, opts: { selected?: boolean; 
   const href = `${base}plugins/${p.s}/`;
   const av = avatar(p.a.login, 40);
   const tags = [
-    p.rv === 'verified' ? `<span class="tag tag-verified" title="This exact version was approved by community reviewers">✓ Verified</span>` : '',
+    p.rv === 'verified' ? `<span class="tag tag-verified" title="This exact version was approved by community reviewers">${checkIcon}Verified</span>` : '',
     p.rv === 'changed' ? `<span class="tag tag-changed" title="An earlier version was approved; this one has not been reviewed yet">Changed since review</span>` : '',
     `<span class="tag tag-${p.t}">${TYPE_SHORT[p.t]}</span>`,
     p.r ? `<span class="tag">${esc(p.r)}</span>` : '',
