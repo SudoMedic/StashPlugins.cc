@@ -1,0 +1,72 @@
+name: Crawl and deploy
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '17 5 * * *' # daily
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm test
+
+      # Bare clones of every plugin repo; later runs only fetch new commits.
+      - uses: actions/cache@v4
+        with:
+          path: .cache
+          key: repos-${{ github.run_id }}
+          restore-keys: repos-
+
+      - name: Crawl plugin sources
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run crawl || echo "::warning::Crawl failed; deploying the committed catalog snapshot."
+
+      - id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Build
+        env:
+          SITE_URL: ${{ steps.pages.outputs.origin }}
+          BASE_PATH: ${{ steps.pages.outputs.base_path }}/
+        run: npm run build
+
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+
+      - name: Keep the crawled catalog
+        uses: actions/upload-artifact@v4
+        with:
+          name: catalog
+          path: src/data/catalog.json
+          retention-days: 14
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

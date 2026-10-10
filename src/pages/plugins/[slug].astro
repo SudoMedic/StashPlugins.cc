@@ -1,0 +1,256 @@
+---
+import { marked } from 'marked';
+import sanitizeHtml from 'sanitize-html';
+import Base from '../../layouts/Base.astro';
+import {
+  catalog,
+  dependencies,
+  getPlugin,
+  installSpecs,
+  sourcesBySlug,
+  TYPE_LABELS,
+  type Plugin,
+} from '../../lib/catalog';
+import { installPanelHtml } from '../../lib/install';
+import { avatar, shortDate, timeAgo } from '../../lib/render';
+import type { SourceRef } from '../../lib/snippets';
+
+export function getStaticPaths() {
+  return catalog.plugins.map((p) => ({ params: { slug: p.slug } }));
+}
+
+const base = import.meta.env.BASE_URL;
+const p = getPlugin(Astro.params.slug!) as Plugin;
+const source = sourcesBySlug.get(p.source)!;
+const deps = dependencies(p);
+const specs = installSpecs(p);
+const sourceRefs: SourceRef[] = [];
+for (const s of specs) {
+  const owner = catalog.plugins.find((q) => q.sourceUrl === s.sourceURL);
+  if (owner && !sourceRefs.some((r) => r.url === owner.sourceUrl))
+    sourceRefs.push({ name: owner.sourceName, url: owner.sourceUrl, slug: owner.source });
+}
+const panelArgs = { names: [p.name], specs, sources: sourceRefs, uid: 'pg' };
+const panel = installPanelHtml({ ...panelArgs, target: { url: '' }, tab: 'source' });
+
+// READMEs are third-party content: render, then strip anything active.
+const readme = p.readme
+  ? sanitizeHtml(await marked.parse(p.readme, { gfm: true }), {
+      allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'h1', 'h2', 'details', 'summary', 'picture', 'source', 'del', 'kbd', 'sup', 'sub']),
+      allowedAttributes: {
+        a: ['href', 'title'],
+        img: ['src', 'alt', 'title', 'width', 'height'],
+        source: ['srcset', 'media'],
+        th: ['align'],
+        td: ['align'],
+        '*': [],
+      },
+      allowedSchemes: ['http', 'https', 'mailto'],
+      transformTags: {
+        a: sanitizeHtml.simpleTransform('a', { rel: 'nofollow noopener', target: '_blank' }),
+        img: sanitizeHtml.simpleTransform('img', { loading: 'lazy' }),
+      },
+    })
+  : '';
+
+const fromSource = catalog.plugins.filter((q) => q.source === p.source && q.slug !== p.slug).slice(0, 8);
+const alsoIn = (p.alsoIn ?? []).map((s) => getPlugin(s)!).filter(Boolean);
+const host = p.repoUrl?.includes('codeberg.org') ? 'Codeberg' : 'GitHub';
+const profile = (login?: string) => (login ? `https://github.com/${login}` : undefined);
+const title = `${p.name} — Stash ${p.type === 'theme' ? 'theme' : 'plugin'} by ${p.author.name}`;
+const description = (p.description ?? `${p.name}, a ${TYPE_LABELS[p.type].toLowerCase()} for Stash.`) + ` Install it from ${p.sourceName}.`;
+---
+
+<Base
+  title={title}
+  description={description}
+  jsonLd={{
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareSourceCode',
+    name: p.name,
+    description: p.description,
+    codeRepository: p.repoUrl,
+    author: { '@type': 'Person', name: p.author.name, url: profile(p.author.login) },
+    dateCreated: p.created,
+    dateModified: p.updated,
+    version: p.version,
+  }}
+>
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href={base}>Plugins</a><span aria-hidden="true">/</span>
+      <a href={`${base}?source=${p.source}`}>{p.sourceName}</a><span aria-hidden="true">/</span>
+      <span aria-current="page">{p.name}</span>
+    </nav>
+    <div class="detail">
+      <article>
+        <div class="tags" style="margin-bottom:12px">
+          <span class={`tag tag-${p.type}`}>{TYPE_LABELS[p.type]}</span>
+          {p.runtime && <span class="tag">{p.runtime}</span>}
+          {p.tags.includes('css') && p.type !== 'theme' && <span class="tag">CSS</span>}
+          {p.tags.includes('settings') && <span class="tag">Settings</span>}
+          {source.archived && <span class="tag">Archived repo</span>}
+        </div>
+        <h1>{p.name}</h1>
+        <p class="lede">{p.description ?? 'No description provided.'}</p>
+        <a class="person" href={profile(p.author.login)} target="_blank" rel="noopener">
+          {p.author.login ? <img src={avatar(p.author.login, 44)} alt="" width="22" height="22" /> : <span class="av-fallback" />}
+          <span>{p.author.name}</span>
+        </a>
+
+        <dl class="facts">
+          <div><dt>Last updated</dt><dd><time datetime={p.updated} data-ago>{timeAgo(p.updated, Date.parse(catalog.generatedAt))}</time><br /><span class="muted">{shortDate(p.updated)}</span></dd></div>
+          <div><dt>First created</dt><dd><time datetime={p.created}>{shortDate(p.created)}</time></dd></div>
+          <div><dt>Version</dt><dd><code>{p.version ?? '—'}</code></dd></div>
+          <div><dt>Package id</dt><dd><code>{p.id}</code></dd></div>
+          {p.commits && <div><dt>Commits</dt><dd>{p.commits}</dd></div>}
+          {p.stars != null && <div><dt>Repo stars</dt><dd>{p.stars}</dd></div>}
+        </dl>
+
+        <div class="links">
+          {p.folderUrl && <a class="btn" href={p.folderUrl} target="_blank" rel="noopener">View source on {host}</a>}
+          {p.repoUrl && p.folderUrl !== p.repoUrl && <a class="btn" href={p.repoUrl} target="_blank" rel="noopener">Repository</a>}
+          {p.homepage && <a class="btn" href={p.homepage} target="_blank" rel="noopener nofollow">Homepage</a>}
+        </div>
+
+        {
+          deps.length > 0 && (
+            <section class="section">
+              <h2>Requires</h2>
+              <ul class="kv">
+                {deps.map((d) => (
+                  <li>
+                    {d.plugin ? <a href={`${base}plugins/${d.plugin.slug}/`}>{d.plugin.name}</a> : <code>{d.spec.id}</code>}
+                    <span>Installed automatically by the GraphQL and cURL snippets.</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )
+        }
+
+        {
+          (p.tasks?.length ?? 0) > 0 && (
+            <section class="section">
+              <h2>Tasks</h2>
+              <ul class="kv">
+                {p.tasks!.map((t) => (
+                  <li>
+                    {t.name}
+                    {t.description && <span>{t.description}</span>}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )
+        }
+
+        {
+          (p.hooks?.length ?? 0) > 0 && (
+            <section class="section">
+              <h2>Hooks</h2>
+              <ul class="kv">
+                {p.hooks!.map((h) => (
+                  <li>
+                    {h.name}
+                    <span>
+                      {h.description}
+                      {h.triggeredBy.length > 0 && ` Runs on ${h.triggeredBy.join(', ')}.`}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )
+        }
+
+        {
+          (p.settings?.length ?? 0) > 0 && (
+            <section class="section">
+              <h2>Settings</h2>
+              <ul class="kv">
+                {p.settings!.map((s) => (
+                  <li>
+                    {s.name} {s.type && <code class="muted">{s.type.toLowerCase()}</code>}
+                    {s.description && <span>{s.description}</span>}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )
+        }
+
+        {
+          readme && (
+            <section class="section">
+              <h2>README</h2>
+              <div class="panel readme prose" set:html={readme} />
+            </section>
+          )
+        }
+
+        {
+          (p.contributors?.length ?? 0) > 1 && (
+            <section class="section">
+              <h2>Contributors</h2>
+              <div class="people">
+                {p.contributors!.map((c) => (
+                  <a class="person" href={profile(c.login)} target="_blank" rel="noopener">
+                    {c.login ? <img src={avatar(c.login, 44)} alt="" width="22" height="22" loading="lazy" /> : <span class="av-fallback" />}
+                    <span>{c.name}</span>
+                  </a>
+                ))}
+              </div>
+            </section>
+          )
+        }
+
+        {
+          alsoIn.length > 0 && (
+            <section class="section">
+              <h2>Also available from</h2>
+              <ul class="kv">
+                {alsoIn.map((q) => (
+                  <li>
+                    <a href={`${base}plugins/${q.slug}/`}>{q.sourceName}</a>
+                    <span>
+                      Version {q.version ?? '—'} · updated {shortDate(q.updated)}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )
+        }
+
+        {
+          fromSource.length > 0 && (
+            <section class="section">
+              <h2>More from {p.sourceName}</h2>
+              <ul class="kv">
+                {fromSource.map((q) => (
+                  <li>
+                    <a href={`${base}plugins/${q.slug}/`}>{q.name}</a>
+                    {q.description && <span>{q.description}</span>}
+                  </li>
+                ))}
+              </ul>
+              {source.count > fromSource.length + 1 && (
+                <p>
+                  <a href={`${base}?source=${p.source}`}>See all {source.count} from this source →</a>
+                </p>
+              )}
+            </section>
+          )
+        }
+      </article>
+
+      <aside>
+        <div class="panel">
+          <h2>Install</h2>
+          <div data-install-root={JSON.stringify(panelArgs)} set:html={panel} />
+        </div>
+      </aside>
+    </div>
+  </div>
+</Base>

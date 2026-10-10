@@ -1,0 +1,54 @@
+---
+import Base from '../../layouts/Base.astro';
+import { catalog } from '../../lib/catalog';
+import { codeBlock } from '../../lib/install';
+import { curlSnippet, graphqlSnippet } from '../../lib/snippets';
+
+const base = import.meta.env.BASE_URL;
+const example = { id: 'skip-intro', sourceURL: 'https://feederbox826.github.io/plugins/main/index.yml' };
+---
+
+<Base title="How to install Stash plugins — StashPlugins" description="Four ways to install a community plugin or theme into Stash, from the Settings UI to a single GraphQL call." nav="guide">
+  <div class="wrap" style="max-width:780px">
+    <header class="page-head">
+      <h1>How to install</h1>
+      <p>Every plugin page has an <strong>Install</strong> box with ready-to-paste snippets. Here is what each one does.</p>
+    </header>
+
+    <div class="prose">
+      <h2>1. Add source (Stash UI)</h2>
+      <p>
+        The standard way. In Stash go to <strong>Settings → Plugins → Available Plugins → Add Source</strong>, paste the name, source URL and local path we give you, then tick the plugin and click
+        <strong>Install</strong>. Stash will then show updates for everything in that source.
+      </p>
+
+      <h2>2. GraphQL (fastest)</h2>
+      <p>
+        Stash has a built-in <code>installPackages</code> mutation. It takes a package id and its source URL, downloads the zip, checks its SHA-256 and installs it — no source setup needed. Open
+        <code>http://localhost:9999/playground</code>, paste, press ▶:
+      </p>
+      <Fragment set:html={codeBlock(graphqlSnippet([example]), 'example mutation')} />
+      <p>Required plugins (like <code>CommunityScriptsUILibrary</code>) are added to the snippet for you.</p>
+
+      <h2>3. cURL</h2>
+      <p>The same mutation from a terminal. If your Stash has a login, set your API key (Settings → Security) in the install box and it is added as an <code>ApiKey</code> header.</p>
+      <Fragment set:html={codeBlock(curlSnippet([example], { url: '' }), 'example cURL')} />
+
+      <h2>4. config.yml</h2>
+      <p>
+        For headless or Docker setups, add sources under <code>plugins.package_sources</code> in <code>config.yml</code> and restart Stash. The <a href={`${base}sources/`}>Sources</a> page has a snippet with
+        every online source.
+      </p>
+
+      <h2>Install several at once</h2>
+      <p>Tick the checkbox on any plugin cards, then press <strong>Install selected</strong>. You get one snippet for all of them, even across sources.</p>
+
+      <h2>Where the data comes from</h2>
+      <p>
+        Once a day we read every index on the <a href={catalog.forumUrl}>community source list</a> — the same <code>index.yml</code> files Stash reads — and the git history of each plugin's folder for
+        its author and dates. Plugins are third-party code: read the source before you install.
+      </p>
+      <p>Missing a source? Add it to the forum list and it shows up here on the next refresh.</p>
+    </div>
+  </div>
+</Base>

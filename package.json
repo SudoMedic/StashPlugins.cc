@@ -1,0 +1,21 @@
+{
+  "name": "stashplugins",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "crawl": "node scripts/crawl.mjs",
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "test": "node --test \"test/*.test.mjs\""
+  },
+  "engines": {
+    "node": ">=22.18"
+  },
+  "dependencies": {
+    "astro": "^7.3.8",
+    "marked": "^18.1.0",
+    "sanitize-html": "^2.18.0",
+    "yaml": "^2.9.1"
+  }
+}
