@@ -8,6 +8,7 @@ import {
   getPlugin,
   installable,
   installSpecs,
+  listed,
   REVIEW_LABELS,
   sourcesBySlug,
   TYPE_LABELS,
@@ -55,7 +56,7 @@ const readme = p.readme
     })
   : '';
 
-const fromSource = catalog.plugins.filter((q) => q.source === p.source && q.slug !== p.slug).slice(0, 8);
+const fromSource = listed.filter((q) => q.source === p.source && q.slug !== p.slug).slice(0, 8);
 const alsoIn = (p.alsoIn ?? []).map((s) => getPlugin(s)!).filter((q) => q && installable(q));
 const canInstall = installable(p);
 const review = p.review;

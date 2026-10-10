@@ -30,7 +30,7 @@ const entries: LedgerEntry[] = [...ledger.entries].reverse();
     <header class="page-head">
       <h1>Community review</h1>
       <p>
-        Nobody owns this list. Every approval, takedown and new reviewer is a vote by several independent people, recorded in a public ledger that anyone can copy and check.
+        Nobody owns this list. Every approval, takedown and new reviewer is a vote by several independent people, recorded in a public ledger that anyone can copy and check.{' '}
         {verified.length} of {listed.length} listed plugins are community verified.
       </p>
     </header>
@@ -72,7 +72,7 @@ const entries: LedgerEntry[] = [...ledger.entries].reverse();
 
       <h2>What "verified" means</h2>
       <p>
-        An approval pins the SHA-256 of each package zip, the same hash Stash checks when it installs. If the author publishes new code, the hash changes and the plugin shows
+        An approval pins the SHA-256 of each package zip, the same hash Stash checks when it installs. If the author publishes new code, the hash changes and the plugin shows{' '}
         <em>Changed since review</em> until reviewers approve the new version. A <em>revoke</em> hides a plugin and its install snippets right away, and it keeps them hidden until a new version is approved.
       </p>
 
@@ -146,16 +146,18 @@ const entries: LedgerEntry[] = [...ledger.entries].reverse();
                   {(e.type === 'add-reviewer' || e.type === 'remove-reviewer') && <span> {e.login}</span>}
                   {(e.type === 'add-source' || e.type === 'remove-source') && <span> <code>{e.source}</code></span>}
                   {e.packages && (
-                    <ul class="kv" style="margin:4px 0 0">
-                      {e.packages.map((pkg) => {
+                    <div>
+                      {e.packages.map((pkg, i) => {
                         const p = pluginFor(e.source, pkg.id);
                         return (
-                          <li>
-                            {p ? <a href={`${base}plugins/${p.slug}/`}>{p.name}</a> : <code>{pkg.id}</code>} {pkg.version && <span class="muted">{pkg.version}</span>}
-                          </li>
+                          <>
+                            {i > 0 && ', '}
+                            {p ? <a href={`${base}plugins/${p.slug}/`}>{p.name}</a> : <code>{pkg.id}</code>}
+                            {pkg.version && <span class="muted"> {pkg.version}</span>}
+                          </>
                         );
                       })}
-                    </ul>
+                    </div>
                   )}
                   {(e.reason || e.note) && <div class="muted">{e.reason ?? e.note}</div>}
                 </td>
