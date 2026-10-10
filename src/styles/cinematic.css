@@ -1,0 +1,134 @@
+/* Cinematic layer ---------------------------------------------------------
+   Home page only (imported by components/Cinematic.astro). This is the one
+   exception to the 300ms UI motion rule in global.css: the hero intro runs
+   about 1.4s and the hero scatters with scroll. Depth comes from the brand's
+   own vocabulary (workbench grid, amber glow, outlined ghost type, frame
+   corners, an amber hairline); the cube mark is never transformed.
+   Guard rails live in scripts/cinematic.ts: reduced motion runs nothing,
+   touch gets entrances only, a key press or focus settles the scene, and
+   print and no-JS show everything. */
+
+@layer cinematic {
+  .cine-hero {
+    position: relative;
+    isolation: isolate;
+    overflow: clip;
+  }
+  .cine-stage {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+  }
+  .cine-layer {
+    position: absolute;
+    inset: 0;
+  }
+
+  /* Depth 0: the workbench grid, fading out from the headline. */
+  .cine-grid {
+    position: absolute;
+    inset: -40px 0;
+    background-image:
+      linear-gradient(to right, var(--line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+    background-size: 48px 48px;
+    background-position: center top;
+    mask-image: radial-gradient(ellipse 60% 70% at 50% 30%, #000 0%, transparent 75%);
+    opacity: 0.7;
+  }
+
+  /* Depth 1: amber signal glow behind the headline. */
+  .cine-glow {
+    position: absolute;
+    left: 50%;
+    top: 40px;
+    width: min(560px, 90vw);
+    aspect-ratio: 1;
+    margin-left: calc(min(560px, 90vw) / -2);
+    border-radius: 50%;
+    background: radial-gradient(circle, color-mix(in srgb, var(--accent) 16%, transparent) 0%, transparent 65%);
+  }
+  :root[data-theme='light'] .cine-glow {
+    background: radial-gradient(circle, color-mix(in srgb, var(--accent) 12%, transparent) 0%, transparent 65%);
+  }
+
+  /* Depth 2: outlined ghost type, kept above the lede. */
+  .cine-ghost {
+    position: absolute;
+    left: 50%;
+    top: 18px;
+    translate: -50% 0;
+    font-size: clamp(110px, 17vw, 240px);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    color: transparent;
+    -webkit-text-stroke: 1px var(--line-strong);
+    user-select: none;
+  }
+
+  /* Depth 3: L-shaped frame corners around the search field. */
+  .cine-corner {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border: 0 solid var(--text-3);
+    pointer-events: none;
+  }
+  .cine-corner.tl {
+    top: -10px;
+    left: -10px;
+    border-width: 1.5px 0 0 1.5px;
+  }
+  .cine-corner.tr {
+    top: -10px;
+    right: -10px;
+    border-width: 1.5px 1.5px 0 0;
+  }
+  .cine-corner.bl {
+    bottom: -10px;
+    left: -10px;
+    border-width: 0 0 1.5px 1.5px;
+  }
+  .cine-corner.br {
+    bottom: -10px;
+    right: -10px;
+    border-width: 0 1.5px 1.5px 0;
+  }
+
+  /* Depth 5: a hairline that sweeps under the search field once. */
+  .cine-hairline {
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    bottom: -1px;
+    height: 1px;
+    background: var(--accent);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* No flash before the intro: hidden only while GSAP sets from-states. */
+  html.cine-pending [data-cine-intro] {
+    opacity: 0;
+    animation: cine-failsafe 1ms 2.5s forwards;
+  }
+  @keyframes cine-failsafe {
+    to {
+      opacity: 1;
+    }
+  }
+
+  @media print {
+    .cine-stage,
+    .cine-corner,
+    .cine-hairline {
+      display: none;
+    }
+    [data-cine-intro] {
+      opacity: 1 !important;
+    }
+  }
+}

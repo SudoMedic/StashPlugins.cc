@@ -7,15 +7,17 @@ interface Props {
   description: string;
   nav?: 'browse' | 'sources' | 'guide' | 'review';
   jsonLd?: Record<string, unknown>;
+  /** Opt this page into the cinematic layer (home only). */
+  cinematic?: boolean;
 }
-const { title, description, nav, jsonLd } = Astro.props;
+const { title, description, nav, jsonLd, cinematic } = Astro.props;
 const base = import.meta.env.BASE_URL;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const updated = new Date(catalog.generatedAt).toLocaleDateString('en-US', { dateStyle: 'medium', timeZone: 'UTC' });
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-cine-page={cinematic ? '' : undefined}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -37,6 +39,8 @@ const updated = new Date(catalog.generatedAt).toLocaleDateString('en-US', { date
         if (t) document.documentElement.dataset.theme = t;
         else if (matchMedia('(prefers-color-scheme: light)').matches) document.documentElement.dataset.theme = 'light';
         if (document.documentElement.dataset.theme === 'light') document.querySelector('meta[name=theme-color]').content = '#f7f7f5';
+        // Hide the cinematic intro elements until GSAP has set their from-states (CSS failsafe reveals them at 2.5s).
+        if (document.documentElement.hasAttribute('data-cine-page') && !matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('cine-pending');
       } catch {}
     </script>
   </head>
