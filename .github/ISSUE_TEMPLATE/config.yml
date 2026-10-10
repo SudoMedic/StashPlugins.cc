@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Report a vulnerability in this site
+    url: https://github.com/SudoMedic/StashPlugins.cc/security/advisories/new
+    about: Please report security issues privately.
+  - name: Stash community forum
+    url: https://discourse.stashapp.cc/
+    about: Questions about Stash itself or about using a specific plugin.

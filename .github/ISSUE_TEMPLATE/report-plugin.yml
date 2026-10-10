@@ -1,0 +1,40 @@
+name: Report a plugin
+description: Report a plugin that is malicious, unsafe or abusive
+labels: [plugin-report]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for plugins listed on the site. For vulnerabilities in the site itself, see SECURITY.md.
+        Do not include credentials or personal data.
+  - type: input
+    id: plugin
+    attributes:
+      label: Plugin page
+      description: The URL of the plugin on StashPlugins
+      placeholder: https://stashplugins.cc/plugins/<slug>/
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Shown on the plugin page
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Problem
+      options:
+        - Malicious behavior (data theft, unexpected network access, damage)
+        - Security vulnerability in the plugin
+        - Spam or impersonation
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: What you observed
+      description: Steps, files or lines of code involved, and how you found it
+    validations:
+      required: true

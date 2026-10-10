@@ -1,0 +1,24 @@
+name: Bug report
+description: Something on the site or in the tooling does not work as expected
+labels: [bug]
+body:
+  - type: input
+    id: page
+    attributes:
+      label: Page or command
+      placeholder: https://stashplugins.cc/... or npm run ledger -- ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Include error messages and, for the site, your browser
+    validations:
+      required: true
