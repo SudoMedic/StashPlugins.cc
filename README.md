@@ -66,7 +66,8 @@ GitHub Actions does everything:
   re-crawls all sources, builds, and publishes to GitHub Pages. If the crawl fails it ships the committed snapshot.
 
 One-time setup: *Settings → Pages → Source: GitHub Actions*. For the custom domain, add `stashplugins.cc` under
-*Settings → Pages → Custom domain* and point DNS at GitHub Pages. The build picks up the domain or project path automatically.
+*Settings → Pages → Custom domain* and point DNS at GitHub Pages. The public domain is pinned as `SITE_URL` in
+`deploy.yml`, so canonical and share links never use the github.io address.
 
 ## Adding a source
 
