@@ -18,13 +18,13 @@ const example = { id: 'skip-intro', sourceURL: 'https://feederbox826.github.io/p
     <div class="prose">
       <h2>1. Add source (Stash UI)</h2>
       <p>
-        The standard way. In Stash go to <strong>Settings → Plugins → Available Plugins → Add Source</strong>, paste the name, source URL and local path we give you, then tick the plugin and click
+        The standard way. In Stash go to <strong>Settings → Plugins → Available Plugins → Add Source</strong>, paste the name, source URL and local path we give you, then tick the plugin and click{' '}
         <strong>Install</strong>. Stash will then show updates for everything in that source.
       </p>
 
       <h2>2. GraphQL (fastest)</h2>
       <p>
-        Stash has a built-in <code>installPackages</code> mutation. It takes a package id and its source URL, downloads the zip, checks its SHA-256 and installs it. No source setup needed. Open
+        Stash has a built-in <code>installPackages</code> mutation. It takes a package id and its source URL, downloads the zip, checks its SHA-256 and installs it. No source setup needed. Open{' '}
         <code>http://localhost:9999/playground</code>, paste, press ▶:
       </p>
       <Fragment set:html={codeBlock(graphqlSnippet([example]), 'example mutation')} />

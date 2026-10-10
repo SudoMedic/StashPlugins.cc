@@ -39,7 +39,7 @@ const entries: LedgerEntry[] = [...ledger.entries].reverse();
       <h2>How it works</h2>
       <ol>
         <li>
-          <strong>Propose.</strong> Anyone with a GitHub account older than {governance.proposer.minAccountAgeDays} days opens a pull request that appends one entry to
+          <strong>Propose.</strong> Anyone with a GitHub account older than {governance.proposer.minAccountAgeDays} days opens a pull request that appends one entry to{' '}
           <a href={`${repo}/blob/main/registry/ledger.jsonl`}><code>registry/ledger.jsonl</code></a>, for example <code>npm run ledger -- approve &lt;plugin&gt; --by &lt;you&gt;</code>.
         </li>
         <li>
@@ -66,7 +66,7 @@ const entries: LedgerEntry[] = [...ledger.entries].reverse();
         </tbody>
       </table>
       <p>
-        Every change needs at least two people: the one proposing it and someone else approving it. While there are fewer reviewers than a quorum, every eligible reviewer must approve. The numbers live in
+        Every change needs at least two people: the one proposing it and someone else approving it. While there are fewer reviewers than a quorum, every eligible reviewer must approve. The numbers live in{' '}
         <a href={`${repo}/blob/main/registry/governance.json`}><code>registry/governance.json</code></a>, and changing them takes {q.governance} approvals.
       </p>
 

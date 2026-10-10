@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import { catalog, listItems, stats, TYPE_LABELS, type PluginType } from '../lib/catalog';
 import { cardHtml } from '../lib/render';
+import Cinematic from '../components/Cinematic.astro';
 
 const base = import.meta.env.BASE_URL;
 const PAGE = 48;
@@ -17,24 +18,35 @@ const now = Date.parse(catalog.generatedAt);
   title="StashPlugins | search every Stash plugin and theme"
   description={`Search, sort and install ${stats.unique} community plugins and themes for Stash from ${stats.sources} sources. Copy a one-line install for your Stash instance.`}
   nav="browse"
+  cinematic
   jsonLd={{ '@context': 'https://schema.org', '@type': 'WebSite', name: 'StashPlugins', url: Astro.site?.href }}
 >
-  <section class="hero wrap">
-    <h1>Plugins and themes for <em>Stash</em></h1>
-    <p>A searchable index of {stats.sources} community plugin sources, with install instructions for every plugin.</p>
-    <ul class="stats">
-      <li><strong>{stats.unique}</strong>plugins &amp; themes</li>
-      <li><strong>{stats.sources}</strong>sources</li>
-      <li><strong>{stats.authors}</strong>authors</li>
-      <li><a href={`${base}review/`}><strong>{stats.verified}</strong>community verified</a></li>
-    </ul>
-    <form class="search" role="search" onsubmit="return false">
-      <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
-      <label for="q" class="sr-only">Search plugins</label>
-      <input id="q" type="search" placeholder="Search by name, author, feature…" autocomplete="off" spellcheck="false" />
-      <kbd aria-hidden="true">/</kbd>
-    </form>
-  </section>
+  <div class="cine-hero" data-cine="hero">
+    <div class="cine-stage" aria-hidden="true">
+      <div class="cine-layer" data-depth="0"><div class="cine-grid"></div></div>
+      <div class="cine-layer" data-depth="1"><div class="cine-glow"></div></div>
+      <div class="cine-layer" data-depth="2"><span class="cine-ghost">Plugins</span></div>
+    </div>
+    <section class="hero wrap">
+      <h1 data-depth="4" data-cine-intro>Plugins and themes for <em>Stash</em></h1>
+      <p data-depth="4" data-cine-intro>A searchable index of {stats.sources} community plugin sources, with install instructions for every plugin.</p>
+      <ul class="stats" data-depth="4" data-cine-intro>
+        <li><strong>{stats.unique}</strong>plugins &amp; themes</li>
+        <li><strong>{stats.sources}</strong>sources</li>
+        <li><strong>{stats.authors}</strong>authors</li>
+        <li><a href={`${base}review/`}><strong>{stats.verified}</strong>community verified</a></li>
+      </ul>
+      <form class="search" role="search" onsubmit="return false" data-depth="3" data-cine-intro>
+        <span class="cine-corner tl" aria-hidden="true"></span><span class="cine-corner tr" aria-hidden="true"></span><span class="cine-corner bl" aria-hidden="true"></span><span class="cine-corner br" aria-hidden="true"></span>
+        <span class="cine-hairline" data-depth="5" aria-hidden="true"></span>
+        <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+        <label for="q" class="sr-only">Search plugins</label>
+        <input id="q" type="search" placeholder="Search by name, author, feature…" autocomplete="off" spellcheck="false" />
+        <kbd aria-hidden="true">/</kbd>
+      </form>
+    </section>
+  </div>
+  <Cinematic />
 
   <section class="wrap" aria-label="Plugins">
     <div class="toolbar">

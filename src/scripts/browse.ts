@@ -228,8 +228,16 @@ document.querySelector('.chips')!.addEventListener('click', (e) => {
   update();
 });
 moreBtn.addEventListener('click', () => {
+  const before = shown;
   shown += PAGE;
   render();
+  // Pointer only: the added cards arrive in a short cascade.
+  if (document.documentElement.dataset.input === 'key') return;
+  grid.querySelectorAll<HTMLElement>('.card').forEach((card, i) => {
+    if (i < before) return;
+    card.style.setProperty('--i', String(i - before));
+    card.classList.add('is-new');
+  });
 });
 $('reset').addEventListener('click', () => {
   q.value = '';

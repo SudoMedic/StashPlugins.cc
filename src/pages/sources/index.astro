@@ -49,7 +49,7 @@ const fmt = (iso?: string) => (iso ? new Date(iso).toLocaleDateString('en-US', {
                     <>
                       {' '}
                       <a class="muted" href={s.repoUrl} target="_blank" rel="noopener" aria-label={`${s.name} repository`}>
-                        ↗
+                        <svg aria-hidden="true" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h7v7M13 3 4 12"></path></svg>
                       </a>
                     </>
                   )}
@@ -60,7 +60,7 @@ const fmt = (iso?: string) => (iso ? new Date(iso).toLocaleDateString('en-US', {
                   <div class="field" style="grid-template-columns:1fr auto;max-width:520px">
                     <code class="field-value">{s.url}</code>
                     <button type="button" class="copy copy-sm" data-copy aria-label={`Copy ${s.name} URL`}>
-                      <span>Copy</span>
+                      <span class="swap"><span class="swap-idle">Copy</span><span class="swap-done">Copied</span></span>
                     </button>
                   </div>
                 </td>
