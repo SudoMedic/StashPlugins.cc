@@ -42,7 +42,7 @@ typography:
     fontSize: "clamp(30px, 5.2vw, 52px)"
     fontWeight: 800
     lineHeight: 1.2
-    letterSpacing: "-0.03em"
+    letterSpacing: "-0.015em"
   headline:
     fontFamily: "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
     fontSize: "clamp(26px, 4vw, 38px)"
@@ -72,6 +72,11 @@ typography:
     lineHeight: 1.55
   body-small:
     fontFamily: "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+    fontSize: "14px"
+    fontWeight: 400
+    lineHeight: 1.55
+  caption:
+    fontFamily: "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
     fontSize: "13px"
     fontWeight: 400
     lineHeight: 1.55
@@ -97,6 +102,10 @@ rounded:
   xs: "6px"
   radius-sm: "8px"
   radius: "12px"
+  search: "14px"
+  dialog: "16px"
+  well: "10px"
+  tab: "7px"
   pill: "999px"
 components:
   button:
@@ -136,12 +145,13 @@ components:
   search-input:
     backgroundColor: "{colors.raised-slate}"
     textColor: "{colors.chalk}"
-    rounded: "14px"
+    rounded: "{rounded.search}"
     padding: "0 64px 0 50px"
     height: "56px"
   chip:
     backgroundColor: "transparent"
     textColor: "{colors.fog-grey}"
+    typography: "{typography.caption}"
     rounded: "{rounded.pill}"
     padding: "0 12px"
     height: "32px"
@@ -168,13 +178,23 @@ components:
     backgroundColor: "{colors.raised-slate}"
     rounded: "{rounded.radius}"
     padding: "18px"
+  facts:
+    backgroundColor: "{colors.raised-slate}"
+    rounded: "{rounded.radius}"
+    padding: "12px 14px"
+  review-box:
+    backgroundColor: "{colors.raised-slate}"
+    textColor: "{colors.fog-grey}"
+    typography: "{typography.body-small}"
+    rounded: "{rounded.radius-sm}"
+    padding: "12px 14px"
   tabs:
     backgroundColor: "{colors.sunken-ink}"
-    rounded: "10px"
+    rounded: "{rounded.well}"
     padding: "3px"
   tab:
     textColor: "{colors.fog-grey}"
-    rounded: "7px"
+    rounded: "{rounded.tab}"
     padding: "0 10px"
     height: "32px"
   tab-selected:
@@ -195,7 +215,7 @@ components:
   dialog:
     backgroundColor: "{colors.raised-slate}"
     textColor: "{colors.chalk}"
-    rounded: "16px"
+    rounded: "{rounded.dialog}"
     width: "min(640px, calc(100vw - 24px))"
   selection-bar:
     backgroundColor: "{colors.chalk}"
@@ -219,7 +239,7 @@ StashPlugins is a quiet, dense tool surface. It is meant to sit in a tab next to
 
 Density is a feature. Cards carry a title, a clamped description, a tag row, a two-column metadata strip and an action row inside 16px of padding; grids pack at 290px minimum with 14px gutters. Hierarchy comes from tone (three text greys), weight and hairlines, not from size jumps or decoration. Mono type is reserved for things a user will actually paste or verify: install snippets, source URLs, package hashes, keyboard hints.
 
-A light theme mirrors the same structure on warm paper neutrals with a darker Burnt Amber, chosen from `prefers-color-scheme` and persisted via the header toggle. Both themes share radii, spacing and component geometry; only the tone tokens swap.
+A light theme mirrors the same structure on warm paper neutrals with a darker Burnt Amber, chosen from `prefers-color-scheme` and persisted via the header toggle. Both themes share radii, spacing and component geometry; only the tone tokens swap. The browser `theme-color` meta follows the active theme (Workbench Ink in dark, Bench Paper in light), set before first paint and updated when the toggle flips.
 
 **Key Characteristics:**
 - Dark workbench by default, warm paper light theme with identical structure.
@@ -227,7 +247,7 @@ A light theme mirrors the same structure on warm paper neutrals with a darker Bu
 - Flat tonal layering; soft shadows only on the search field, dialog and floating selection bar.
 - Hairline borders define every container.
 - Mono only for real code, URLs and hashes.
-- Status colors (mint, coral) and plugin-type hues live only inside small tags, dots and rails.
+- Status colors (mint, coral) and plugin-type hues live only inside small tags, dots and tinted hairlines.
 
 ## Colors
 
@@ -237,13 +257,13 @@ A near-monochrome slate (or paper) neutral ramp carrying one amber signal, with 
 - **Signal Amber** (dark, `--accent`): primary buttons, the selected-card outline, the search field's focus border, focus rings (`--focus`), the "Plugins" half of the wordmark, accented words in the hero headline, and the favicon's package mark. Also doubles as the hybrid plugin-type hue in the dark theme.
 - **Burnt Amber** (light, `--accent`): the same roles in the light theme; darker so it holds up as a fill and outline on paper.
 - **Amber Ink** (`--accent-ink`, both themes): text on amber fills.
-- **Deep Ochre** (light, `--accent-text`): amber used as small text on paper (the "Changed since review" tag), darkened to hold 4.5:1. In the dark theme `--accent-text` is Signal Amber itself.
+- **Deep Ochre** (light, `--accent-text`): amber used as small text or a small mark on paper (the "Changed since review" tag, the changed review box's dot), darkened to hold 4.5:1. In the dark theme `--accent-text` is Signal Amber itself.
 - **Amber Wash** / **Amber Wash Light** (`--accent-soft`): the 4px focus halo around the search field. Never a surface fill.
 
 ### Secondary
-Semantic status, used only at tag, dot and rail scale:
-- **Verified Mint** (dark) / **Backend Green** (light) (`--ok`): verified tags (tinted 10% background, 45% border), the verified count in the hero stats, healthy-source dots, the "copied" state of copy buttons, and the left rail of a verified review box. Also the backend plugin-type hue in the dark theme.
-- **Revoked Coral** (dark) / **Brick Red** (light) (`--err`): revoked tags, failing-source dots, the left rail of a revoked review box.
+Semantic status, used only at tag, dot and hairline scale:
+- **Verified Mint** (dark) / **Backend Green** (light) (`--ok`): verified tags (tinted 10% background, 45% border, inline SVG check), the verified count in the hero stats, healthy-source dots, the "copied" state of copy buttons, and the 8px status dot plus 40%-tinted border of a verified review box. Also the backend plugin-type hue in the dark theme.
+- **Revoked Coral** (dark) / **Brick Red** (light) (`--err`): revoked tags, failing-source dots, and the 8px status dot plus 40%-tinted border of a revoked review box.
 
 ### Tertiary
 Plugin-type hues, one per type, applied as tag text plus a 35% border:
@@ -253,21 +273,21 @@ Plugin-type hues, one per type, applied as tag text plus a 35% border:
 - **Signal Amber** (dark) / **Deep Ochre** (light) (`--t-hybrid`): UI plus tasks.
 
 ### Neutral
-- **Workbench Ink** (dark) / **Bench Paper** (light) (`--bg`): page background, also the translucent base of the sticky header.
-- **Raised Slate** (dark) / **Paper White** (light) (`--bg-raised`): cards, panels, buttons, selects, the search field, the dialog, table wrappers.
+- **Workbench Ink** (dark) / **Bench Paper** (light) (`--bg`): page background, the translucent base of the sticky header, and the browser theme color.
+- **Raised Slate** (dark) / **Paper White** (light) (`--bg-raised`): cards, panels, facts, review boxes, buttons, selects, the search field, the dialog, table wrappers.
 - **Sunken Ink** (dark) / **Sunken Paper** (light) (`--bg-sunken`): wells: code blocks, copy fields, the tab track, tags, inline code.
 - **Hover Slate** (dark) / **Hover Paper** (light) (`--bg-hover`): hover and current-page fill for nav links, buttons and icon buttons; avatar placeholder.
 - **Hairline Slate** (dark) / **Paper Hairline** (light) (`--line`): default 1px border on every container and divider.
 - **Edge Slate** (dark) / **Paper Edge** (light) (`--line-strong`): border on buttons and copy buttons, hover border on cards and chips, link underlines, scrollbar thumb.
 - **Control Slate** (dark) / **Control Pewter** (light) (`--control-line`): border of text fields and selects (search, source and sort selects, target form inputs), tuned to 3:1 against every surface.
 - **Chalk** (dark) / **Press Ink** (light) (`--text`): primary text; also the fill of selected chips, the selection bar and the toast (inverted surfaces).
-- **Fog Grey** (dark) / **Graphite** (light) (`--text-2`): descriptions, secondary copy, resting nav links, unselected chips and tabs.
-- **Dust Grey** (dark) / **Pewter** (light) (`--text-3`): metadata labels, counts, placeholders, breadcrumbs, footer. Tuned to stay legible at 11 to 13px on both grounds.
+- **Fog Grey** (dark) / **Graphite** (light) (`--text-2`): descriptions, secondary copy, resting nav links, unselected chips and tabs, review box body text.
+- **Dust Grey** (dark) / **Pewter** (light) (`--text-3`): metadata labels, counts, placeholders, breadcrumbs, footer, the sources table's external-repo arrow, the neutral review dot. Tuned to stay legible at 11 to 13px on both grounds.
 
 ### Named Rules
 **The One Signal Rule.** Amber is the only accent. It marks the primary action, focus, selection and the brand; it never fills a large surface or decorates a heading for its own sake.
 
-**The Tag-Scale Rule.** Status and plugin-type hues appear only as tag text, tag borders, 7px dots and 3px review rails. They never color a card, a button or body text.
+**The Tag-Scale Rule.** Status and plugin-type hues appear only as tag text, tag borders, 7px source dots, 8px review dots and the 40% tint mixed into a review box's hairline. They never fill a card, a button, a panel or body text.
 
 **The Control Edge Rule.** Anything you type into or pick from (text fields, selects) is outlined in the control-line tone, not a hairline, so its boundary is visible at 3:1 on every surface.
 
@@ -282,14 +302,15 @@ Plugin-type hues, one per type, applied as tag text plus a 35% border:
 **Character:** one native sans at every level, so the site reads like part of the user's own tooling; weight and tracking do the work that a second family would elsewhere.
 
 ### Hierarchy
-- **Display** (800, clamp 30px to 52px, line-height 1.2, tracking -0.03em): the home hero headline only, capped at 16ch, with key words picked out in amber.
-- **Headline** (700, clamp 26px to 38px, line-height 1.2, tracking -0.01em): plugin detail titles; page headers use the same treatment capped at 36px.
+- **Display** (800, clamp 30px to 52px, line-height 1.2, tracking -0.015em): the home hero headline only, capped at 16ch, with key words picked out in amber.
+- **Headline** (700, clamp 26px to 38px, line-height 1.2, tracking -0.01em): plugin detail titles; page headers and the not-found heading use the same treatment capped at 36px.
 - **Title** (700, 18px): section headings and dialog titles; panel headings drop to 15px.
 - **Card Title** (650, 16px): plugin names on cards; wraps anywhere rather than truncating.
 - **Lede** (400, 17px, Fog Grey): hero subcopy (max 58ch) and the detail page summary; page-head intros run to 70ch.
 - **Body** (400, 15px, line-height 1.55): base text and README prose.
-- **Body Small** (13px to 14px): nav links, chips, buttons, card descriptions (14px, clamped to three lines), metadata values.
-- **Label** (400, 11px, uppercase, tracking 0.06em, Dust Grey): term labels in metadata grids and table column headers (600 there). These label data that follows them directly; they are not section kickers.
+- **Body Small** (400, 14px): nav links, buttons, card descriptions (clamped to three lines), hero stats, install tab panels, review boxes, facts values, sources table cells.
+- **Caption** (400, 13px): chips, selects, toggles, small buttons, card metadata values, author names, breadcrumbs, hints, result counts, the footer.
+- **Label** (400, 11px, uppercase, tracking 0.06em, Dust Grey): term labels in metadata grids and facts, and table column headers (600 there). These label data that follows them directly; they are not section kickers.
 - **Tag** (550, 11.5px, 20px line box): tag pills.
 - **Mono** (0.86em of context, line-height 1.6 in blocks; 12px for hashes and source paths): code, snippets, URLs, hashes, `kbd`.
 
@@ -300,13 +321,17 @@ Plugin-type hues, one per type, applied as tag text plus a 35% border:
 
 ## Layout
 
-A single centered column capped at 1240px, with 16px side padding below 720px and 28px above. Content pages narrow the column (780px for the guide, 900px for review, 640px for the not-found page). The home page stacks a centered hero (56px top padding), a 680px search field, a hairline-bottomed toolbar (filter chips left, selects and toggles right, wrapping freely), a result count, then an auto-fill card grid (`minmax(290px, 1fr)`, 14px gap).
+A single centered column capped at 1240px, with 16px side padding below 720px and 28px above. Content pages narrow the column (780px for the guide, 900px for review, 640px for the not-found page). The home page stacks a centered hero (56px top padding), a 680px search field, a hairline-bottomed toolbar, a result count, then an auto-fill card grid (`minmax(290px, 1fr)`, 14px gap). In the toolbar the filter chips sit left; the selects and toggles group wraps beside them on narrow screens and takes its own full-width, right-aligned row at 720px and up, so changing chip counts never reflow the grid below.
 
-The plugin detail page is one column below 980px and a two-column grid above it (fluid main plus a 420px aside that sticks 80px from the top, clearing the 60px sticky header). Facts render as an auto-fill grid of 150px cells separated by inset hairlines.
+Cards in a grid row stretch to equal height and pin their metadata strip to the bottom, so the hairline-topped strips line up across the row regardless of description length.
 
-Spacing has no token scale; it runs on a tight, mostly even rhythm of 4, 6, 8, 10, 12, 14, 16, 18, 20 and 28px, with 6 to 10px gaps inside controls and 14 to 28px between blocks. Large jumps (40px, 56px, 60px) occur only at page heads, the hero and the footer.
+The plugin detail page is one column below 980px and a two-column grid above it (fluid main plus a 420px aside that sticks 80px from the top, clearing the 60px sticky header). Facts render as a wrapping row of cells that grow from a 150px basis, separated by inset hairlines; the last row stretches to fill the width instead of leaving a gap.
 
-Below 560px the "How to install" nav link and the search `kbd` hint are hidden and the header tightens (8px gap, 8px link padding) so the brand, three links and the theme toggle fit one line at 360px. On coarse pointers, small controls (icon buttons, small buttons, chips, nav links, copy buttons, card pick boxes, toggles) grow invisible hit areas to about 44px without moving layout, and selects and form inputs step up to 16px text. Headings balance their line breaks; paragraphs and list items use pretty wrapping; README prose blocks cap at 72ch. Wide tables and tab tracks scroll horizontally inside their containers rather than reflowing.
+The not-found page is a left-aligned 640px block (72px top padding) with a headline, one line of Fog Grey copy and a row of link buttons.
+
+Spacing has no token scale; it runs on a tight, mostly even rhythm of 4, 6, 8, 10, 12, 14, 16, 18, 20 and 28px, with 6 to 10px gaps inside controls and 14 to 28px between blocks. Large jumps (40px, 56px, 60px, 72px) occur only at page heads, the hero, the not-found page and the footer.
+
+Below 560px the "How to install" nav link and the search `kbd` hint are hidden and the header tightens (8px gap, 7px link side padding) so the brand, three links and the theme toggle fit one line at 360px; below 360px the Browse link also drops, since the wordmark already links home. On coarse pointers, small controls (icon buttons, small buttons, chips, nav links, copy buttons, card pick boxes, toggles) grow invisible hit areas to about 44px without moving layout, and selects and form inputs step up to 16px text. Headings balance their line breaks; paragraphs and list items use pretty wrapping; README prose blocks cap at 72ch. Wide tables and tab tracks scroll horizontally inside their containers rather than reflowing.
 
 ## Elevation & Depth
 
@@ -320,15 +345,15 @@ The system is flat by default and builds depth through tone: Sunken Ink wells si
 - **Tab lift** (`0 1px 2px rgb(0 0 0 / 0.25), 0 0 0 1px` hairline): the selected tab in the install panel.
 
 ### Named Rules
-**The Flat-By-Default Rule.** Cards, panels, tables and fields sit flat with a hairline. A shadow means the element floats above the page or is the primary input; nothing else earns one.
+**The Flat-By-Default Rule.** Cards, panels, tables and fields sit flat with a hairline. A shadow means the element floats above the page or is the primary input; nothing else earns one. (The facts grid draws its inner dividers with zero-blur 1px box-shadows; those are hairlines, not elevation.)
 
 **The Hairline-Not-Shadow Rule.** Card hover strengthens the border (Hairline to Edge); card selection is an amber border plus a 1px inset amber ring. Neither adds a drop shadow.
 
 ## Shapes
 
-Gently rounded, never sharp and never blobby. Containers (cards, panels, facts grids, table wrappers) use the 12px radius; controls (buttons, nav links, selects, fields, code wells) use 8px; small fittings (copy buttons, `kbd`) use 6px and inline code 4px. Pills (999px) are reserved for filter chips, tags, person badges, the selection bar and the toast. A few one-offs scale with their element: the search field at 14px, the dialog at 16px, the tab track at 10px with 7px tabs inside. Avatars and status dots are circles.
+Gently rounded, never sharp and never blobby. Containers (cards, panels, facts grids, table wrappers) use the 12px radius; controls and small boxes (buttons, nav links, selects, fields, code wells, review boxes) use 8px; small fittings (copy buttons, `kbd`) use 6px and inline code 4px. Pills (999px) are reserved for filter chips, tags, person badges, the selection bar and the toast. Four named radii scale with their element and recur wherever that element appears: the search field at 14px, the dialog at 16px, the install tab track at 10px with 7px tabs nested inside (track radius minus its 3px padding). Avatars and status dots are circles.
 
-Borders are always 1px solid hairlines, with three deliberate exceptions: `kbd` keys take a 2px bottom border to read as physical keys, review boxes take a 3px colored left rail, and duplicate-source tags take a dashed border.
+Borders are always 1px solid, with two deliberate exceptions: `kbd` keys take a 2px bottom border to read as physical keys, and duplicate-source tags take a dashed border. Review boxes keep the standard 1px border, tinted 40% toward their status color.
 
 The brand mark is an amber line-drawn isometric package (2.4 stroke, rounded joins) on a dark 8px-rounded tile.
 
@@ -348,16 +373,18 @@ Utilitarian and compact.
 - **State:** hover strengthens the border and text; pressed (`aria-pressed`) inverts to a Chalk fill with Workbench Ink text, the count at 75% opacity.
 
 ### Tags
-- **Style:** 20px-tall pills on Sunken Ink with a hairline and Fog Grey 11.5px text.
-- **Variants:** plugin-type tags color text and a 35% border; verified tags add a 10% mint tint; changed tags use `--accent-text` with an amber border; revoked tags use coral; duplicate-source tags go Dust Grey with a dashed border.
+- **Style:** 20px-tall pills on Sunken Ink with a hairline and Fog Grey 11.5px text; a 4px gap leaves room for a leading inline SVG.
+- **Variants:** plugin-type tags color text and a 35% border; verified tags add a 10% mint tint and lead with an inline SVG check; changed tags use `--accent-text` with an amber border; revoked tags use coral; duplicate-source tags go Dust Grey with a dashed border.
 
 ### Cards / Containers
 - **Corner Style:** 12px.
 - **Background:** Raised Slate.
 - **Shadow Strategy:** none (see Elevation).
 - **Border:** hairline; Edge on hover; amber plus inset amber ring when picked for batch install. The whole card is a link target via a stretched pseudo-element, so the focus ring moves to the card.
-- **Internal Padding:** 16px sides and top, 12px bottom, 10px gaps. The metadata strip is a two-column definition grid under a hairline; the source path sits at the foot in 12px mono, truncated with an ellipsis.
-- **Panels** (detail aside, README) use 18px padding; **review boxes** use 8px radius with a 3px status rail.
+- **Internal Padding:** 16px sides and top, 12px bottom, 10px gaps. The metadata strip is a two-column definition grid under a hairline, pushed to the bottom of the card so strips align across a row; the source path sits at the foot in 12px mono, truncated with an ellipsis.
+- **Panels** (detail aside, README) use 18px padding.
+- **Review boxes** sit on Raised Slate with no fill tint: 8px radius, 12px by 14px padding, 14px Fog Grey text, a 1px border mixed 40% toward the status color, and the bold label led by an 8px status dot (mint verified, amber changed, coral revoked, Dust Grey otherwise).
+- **Facts:** a 12px-radius Raised Slate strip of wrapping cells (12px by 14px padding, uppercase label over a 14px value).
 
 ### Inputs / Fields
 - **Search:** 56px tall, 14px radius, Raised Slate, control-line border, field shadow, 17px text, magnifier icon inset 18px left and a `kbd` hint right.
@@ -369,12 +396,16 @@ Utilitarian and compact.
 ### Navigation
 Sticky 60px header on an 82% Workbench Ink mix with a 12px saturating blur and a bottom hairline. Wordmark left ("Stash" in text color, "Plugins" in amber, 700). Nav links right: 14px Fog Grey, 6px by 10px padding, 8px radius; hover and current page get Chalk text on Hover Slate. The theme toggle is an icon button at the end.
 
+### Sources Table
+A hairline-bordered, 12px-radius Raised Slate wrapper that scrolls horizontally. 14px cells with 10px by 14px padding and hairline row dividers; uppercase 11px column labels; numeric columns right-aligned in tabular figures. Status reads as a 7px dot plus 12px text. The external-repo link is a 12px inline SVG arrow in Dust Grey with 4px of padding around it.
+
 ### Install Panel (signature)
 The core task surface, shared by the dialog and the detail aside.
-- **Tabs:** a segmented control: Sunken Ink track with 3px padding, equal-width 32px tabs, selected tab raised to Raised Slate with the tab lift.
+- **Tabs:** a segmented control: Sunken Ink track with 3px padding and a 10px radius, equal-width 32px tabs at 7px radius, selected tab raised to Raised Slate with the tab lift.
 - **Copy fields:** a three-column row (86px label, scrolling mono value, copy button) in a Sunken Ink well.
 - **Code blocks:** Sunken Ink wells, 14px by 16px padding, mono at 1.6 line-height, a copy button pinned 8px from the top right.
 - **Copy button:** 28px (26px small), 6px radius, 12px 550 text with a 14px inline SVG; turns mint with a mint border once copied.
+- **"Your Stash" disclosure:** a hairline-topped 13px Dust Grey summary led by a 10px masked chevron drawn in `currentColor`, which rotates 90 degrees when open; the native marker is hidden.
 
 ### Selection Bar
 A pill pinned bottom-center, inverted (Chalk fill, Workbench Ink text, 14px 550), holding a count, a ghost Clear and a primary "Install selected". It is the only element besides the toast that floats over content.
@@ -387,11 +418,14 @@ A pill pinned bottom-center, inverted (Chalk fill, Workbench Ink text, 14px 550)
 - **Do** put code, URLs and hashes in wells (Sunken Ink, 8px radius) with a copy button.
 - **Do** use `tabular-nums` for every count, date and stat.
 - **Do** define both themes for any new color token; components read only the CSS custom properties, never literal hex.
-- **Do** use inline SVG icons drawn with `currentColor`.
+- **Do** use inline SVG (or a `currentColor` mask) for every icon and marker, including arrows, checks and chevrons.
+- **Do** carry status with a small dot plus a text label, and at most a tinted 1px border.
 - **Do** keep touch targets at about 44px on coarse pointers by growing the hit area, not the visual control.
 
 ### Don't:
-- **Don't** introduce a second accent hue or use status and plugin-type colors outside tags, dots and rails.
+- **Don't** introduce a second accent hue or use status and plugin-type colors outside tags, dots and tinted hairlines.
+- **Don't** mark status with a thick side stripe or a tinted fill; use the dot, the label and the 1px tinted border.
+- **Don't** use Unicode glyphs or emoji as icons.
 - **Don't** add drop shadows to cards, panels or tables; hover and selection are border changes.
 - **Don't** set non-code text in mono.
 - **Don't** pill-shape buttons in page content; pills are for chips, tags, people and floating feedback.

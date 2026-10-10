@@ -288,7 +288,9 @@ li {
   margin: 0 auto 14px;
   max-width: 16ch;
   font-weight: 800;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.015em;
+  /* Keep the authored break ("Plugins and themes / for Stash"). */
+  text-wrap: wrap;
 }
 .hero h1 em {
   font-style: normal;
@@ -426,6 +428,13 @@ kbd {
   gap: 10px;
   align-items: center;
   margin-left: auto;
+}
+/* Always its own row on wide screens, so changing counts never reflow the grid. */
+@media (min-width: 720px) {
+  .toolbar-right {
+    flex-basis: 100%;
+    justify-content: flex-end;
+  }
 }
 .select {
   height: 32px;
@@ -601,7 +610,7 @@ kbd {
   padding: 12px 14px;
   border: 1px solid color-mix(in srgb, var(--status) 40%, var(--line));
   border-radius: var(--radius-sm);
-  background: color-mix(in srgb, var(--status) 5%, var(--bg-raised));
+  background: var(--bg-raised);
   font-size: 14px;
   color: var(--text-2);
 }
@@ -643,7 +652,7 @@ kbd {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
-  margin: 2px 0 0;
+  margin: auto 0 0;
   padding-top: 10px;
   border-top: 1px solid var(--line);
 }
@@ -666,7 +675,6 @@ kbd {
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  margin-top: auto;
 }
 .author {
   display: inline-flex;
@@ -859,8 +867,25 @@ kbd {
   padding-top: 10px;
 }
 .target summary {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   cursor: pointer;
-  list-style-position: inside;
+  list-style: none;
+}
+.target summary::-webkit-details-marker {
+  display: none;
+}
+.target summary::before {
+  content: '';
+  flex: none;
+  width: 10px;
+  height: 10px;
+  background: currentColor;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M3.5 1.5 7 5l-3.5 3.5' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+.target[open] summary::before {
+  rotate: 90deg;
 }
 .target summary code {
   color: var(--text-2);
@@ -995,8 +1020,8 @@ dialog.modal::backdrop {
   overflow-wrap: anywhere;
 }
 .facts {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   background: var(--bg-raised);
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -1004,6 +1029,7 @@ dialog.modal::backdrop {
   margin: 20px 0;
 }
 .facts div {
+  flex: 1 1 150px;
   padding: 12px 14px;
   min-width: 0;
   /* Hairlines between cells; the outer border clips the overhang. */
@@ -1137,6 +1163,7 @@ dialog.modal::backdrop {
   text-align: left;
 }
 .prose table {
+  overflow-wrap: break-word;
   border-collapse: collapse;
   display: block;
   overflow-x: auto;
@@ -1189,6 +1216,12 @@ table.sources tr:last-child td {
 table.sources td.num {
   font-variant-numeric: tabular-nums;
   text-align: right;
+}
+table.sources td a.muted {
+  display: inline-flex;
+  vertical-align: middle;
+  padding: 4px;
+  text-decoration: none;
 }
 .status {
   display: inline-flex;
@@ -1300,7 +1333,7 @@ table.sources td.num {
     inset: -6px 0;
   }
   .copy::after {
-    inset: -9px -4px;
+    inset: -9px 0;
   }
   .pick {
     position: relative;
