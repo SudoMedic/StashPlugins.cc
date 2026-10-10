@@ -3,8 +3,9 @@
 A searchable directory of every community plugin and theme for [Stash](https://github.com/stashapp/stash), built from the
 [community list of plugin sources](https://discourse.stashapp.cc/t/list-of-plugin-sources/122).
 
-Stash makes you add a source, then scroll an unsorted list. This site puts all ~90 sources in one place:
-search, filter by type or source, sort by updated/created/name, and copy a snippet that installs the plugin.
+In Stash, a plugin source has to be added before its plugins can be browsed, and each source is listed separately.
+This site indexes all ~90 community sources in one place. Plugins can be searched, filtered by type or source, sorted
+by date or name, and installed with a generated snippet.
 
 ## What each plugin shows
 
@@ -19,10 +20,12 @@ When a source's code lives outside its repo, dates come from when the package id
 
 ## Community review
 
-No single person decides what's safe. Approving a plugin, taking one down, adding a source, or adding a reviewer is
-a pull request that appends one entry to [`registry/ledger.jsonl`](registry/ledger.jsonl). It merges only when
-enough registered reviewers approve it on GitHub; the PR author and the plugin's owner don't count.
-Each ledger entry includes the hash of the one before it, so history can't be quietly rewritten.
+Plugin approvals are decided by community vote. Approving or revoking a plugin, adding or removing a source, and
+adding or removing a reviewer are each a pull request that appends one entry to
+[`registry/ledger.jsonl`](registry/ledger.jsonl). A pull request is mergeable only after enough registered reviewers
+approve it on GitHub. Approvals from the pull request author and from the owner of the plugin's repository are not
+counted. Each ledger entry records the hash of the previous entry, so earlier entries cannot be changed without
+invalidating the ledger.
 
 An approval pins the package's SHA-256, the same hash Stash verifies on install. Plugins show as
 **Community verified**, **Changed since review** (new code since the approval), **Not reviewed yet**, or
@@ -30,7 +33,7 @@ An approval pins the package's SHA-256, the same hash Stash verifies on install.
 
 ```sh
 npm run ledger -- inspect <plugin-slug>              # unpack the exact zip Stash would install
-npm run ledger -- approve <plugin-slug> --by <you>   # then open a PR; reviewers vote by approving
+npm run ledger -- approve <plugin-slug> --by <you>   # append an approval, then open a pull request
 npm run ledger -- verify                             # check the whole hash chain
 ```
 
@@ -80,13 +83,13 @@ src/pages/               browse page, /plugins/<slug>/, /sources/, /guide/, /plu
 
 ## Deploy
 
-GitHub Actions does everything:
+Deployment runs on GitHub Actions:
 
 - **CI** (`.github/workflows/ci.yml`): tests and builds every PR from the committed catalog.
 - **Crawl and deploy** (`.github/workflows/deploy.yml`): on push to `main`, daily at 05:17 UTC, or by hand:
   re-crawls all sources, builds, and publishes to GitHub Pages. If the crawl fails it ships the committed snapshot.
 - **Community quorum** (`.github/workflows/quorum.yml`): counts reviewer votes on open PRs and posts the
-  `community-quorum` status. Make it a required check on `main` (see [GOVERNANCE.md](GOVERNANCE.md#repository-settings-one-time-by-the-owner)).
+  `community-quorum` status. Make it a required check on `main` (see [GOVERNANCE.md](GOVERNANCE.md#repository-settings)).
 
 One-time setup: *Settings → Pages → Source: GitHub Actions*. For the custom domain, add `stashplugins.cc` under
 *Settings → Pages → Custom domain* and point DNS at GitHub Pages. The build picks up the domain or project path automatically.
@@ -94,8 +97,13 @@ One-time setup: *Settings → Pages → Source: GitHub Actions*. For the custom 
 ## Adding a source
 
 Add it to the [forum list](https://discourse.stashapp.cc/t/list-of-plugin-sources/122). It appears here after the next daily crawl.
-Or propose it directly with `npm run ledger -- add-source <index-url> --by <you>`.
+A source can also be proposed directly with `npm run ledger -- add-source <index-url> --by <you>`.
 
 ## License
 
-[MIT](LICENSE). Use it, fork it, build on it. Plugins listed here keep their own authors' licenses.
+Released under the [MIT License](LICENSE). Plugins listed on the site are distributed under their authors' own licenses.
+
+## Contributing and security
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup and pull request guidelines, and
+[SECURITY.md](SECURITY.md) for reporting a malicious plugin or a vulnerability in this site.
