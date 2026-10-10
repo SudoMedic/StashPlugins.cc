@@ -72,6 +72,7 @@ export function parseIndex(text) {
       version: str(p.version),
       date: normalizeDate(p.date),
       path: String(p.path),
+      sha256: /^[a-f0-9]{64}$/i.test(String(p.sha256 ?? '')) ? String(p.sha256).toLowerCase() : undefined,
       requires: Array.isArray(p.requires) ? p.requires.map(String) : [],
     }));
   if (!pkgs.length) throw new Error('index contains no packages');

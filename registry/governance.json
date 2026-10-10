@@ -1,0 +1,21 @@
+{
+  "quorum": {
+    "approve": 2,
+    "revoke": 1,
+    "add-source": 2,
+    "remove-source": 2,
+    "add-reviewer": 2,
+    "remove-reviewer": 2,
+    "code": 2,
+    "governance": 3
+  },
+  "vetoes": 1,
+  "reviewer": {
+    "minAccountAgeDays": 180
+  },
+  "proposer": {
+    "minAccountAgeDays": 30,
+    "maxEntriesPerPullRequest": 10
+  },
+  "listing": "all"
+}
