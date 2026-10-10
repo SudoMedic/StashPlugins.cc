@@ -1,0 +1,89 @@
+---
+import Base from '../../layouts/Base.astro';
+import { catalog } from '../../lib/catalog';
+import { codeBlock } from '../../lib/install';
+import { configSnippet } from '../../lib/snippets';
+
+const base = import.meta.env.BASE_URL;
+const sources = [...catalog.sources].sort((a, b) => a.name.localeCompare(b.name, 'en', { sensitivity: 'base' }));
+const live = sources.filter((s) => s.status === 'ok' && s.count > 0);
+const latest = new Map<string, string>();
+for (const p of catalog.plugins) {
+  if (p.updated && (latest.get(p.source) ?? '') < p.updated) latest.set(p.source, p.updated);
+}
+const fmt = (iso?: string) => (iso ? new Date(iso).toLocaleDateString('en-US', { dateStyle: 'medium', timeZone: 'UTC' }) : '—');
+---
+
+<Base
+  title="Stash plugin sources — every community index"
+  description={`All ${sources.length} community plugin sources for Stash, with live status and copyable source URLs.`}
+  nav="sources"
+>
+  <div class="wrap">
+    <header class="page-head">
+      <h1>Sources</h1>
+      <p>
+        Every index from the <a href={catalog.forumUrl}>community list</a>. Stash reads plugins from these URLs.
+        {live.length} of {sources.length} are online right now.
+      </p>
+    </header>
+
+    <div class="table-wrap">
+      <table class="sources">
+        <thead>
+          <tr>
+            <th scope="col">Source</th>
+            <th scope="col" class="num">Plugins</th>
+            <th scope="col">Last update</th>
+            <th scope="col">Index URL</th>
+            <th scope="col">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            sources.map((s) => (
+              <tr>
+                <td>
+                  {s.count > 0 ? <a href={`${base}?source=${s.slug}`}>{s.name}</a> : s.name}
+                  {s.repoUrl && (
+                    <>
+                      {' '}
+                      <a class="muted" href={s.repoUrl} target="_blank" rel="noopener" aria-label={`${s.name} repository`}>
+                        ↗
+                      </a>
+                    </>
+                  )}
+                </td>
+                <td class="num">{s.count}</td>
+                <td>{fmt(latest.get(s.slug))}</td>
+                <td>
+                  <div class="field" style="grid-template-columns:1fr auto;max-width:520px">
+                    <code class="field-value">{s.url}</code>
+                    <button type="button" class="copy copy-sm" data-copy aria-label={`Copy ${s.name} URL`}>
+                      <span>Copy</span>
+                    </button>
+                  </div>
+                </td>
+                <td>
+                  {s.status === 'ok' ? (
+                    <span class="status">Online</span>
+                  ) : (
+                    <span class="status err" title={s.error}>
+                      Offline
+                    </span>
+                  )}
+                </td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <section class="section">
+      <h2>Add every source at once</h2>
+      <p class="muted">Merge into <code>plugins:</code> in Stash's <code>config.yml</code>, then restart Stash. Keep any sources you already have.</p>
+      <Fragment set:html={codeBlock(configSnippet(live.map((s) => ({ name: s.name, url: s.url, slug: s.slug }))), 'all sources')} />
+    </section>
+  </div>
+</Base>
