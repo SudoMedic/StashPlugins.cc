@@ -88,7 +88,8 @@ function str(v) {
 export function normalizeDate(v) {
   if (!v) return undefined;
   if (v instanceof Date) return isNaN(v) ? undefined : v.toISOString();
-  const s = String(v).trim().replace(' ', 'T');
+  let s = String(v).trim().replace(' ', 'T');
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) s += 'T00:00:00';
   const d = new Date(/[zZ]|[+-]\d\d:?\d\d$/.test(s) ? s : `${s}Z`);
   return isNaN(d) ? undefined : d.toISOString();
 }

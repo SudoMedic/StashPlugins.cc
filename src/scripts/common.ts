@@ -140,7 +140,13 @@ document.addEventListener('change', (e) => {
   const url = form.querySelector<HTMLInputElement>('[name=stash-url]')!.value.trim();
   const apiKey = form.querySelector<HTMLInputElement>('[name=stash-key]')!.value.trim();
   store.set('stash-target', { url, apiKey: apiKey || undefined });
+  // Re-rendering replaces the form; put focus back where the user was going.
+  const active = document.activeElement as HTMLInputElement | null;
+  const roots = [...document.querySelectorAll('[data-install-root]')];
+  const rootIdx = active ? roots.findIndex((r) => r.contains(active)) : -1;
+  const focusName = rootIdx >= 0 ? active!.name : undefined;
   renderPanels();
+  if (focusName) document.querySelectorAll('[data-install-root]')[rootIdx]?.querySelector<HTMLInputElement>(`[name="${focusName}"]`)?.focus();
   toast('Snippets updated');
 });
 

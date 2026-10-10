@@ -35,3 +35,9 @@ test('normalizeStashUrl defaults to localhost', () => {
   assert.equal(normalizeStashUrl(''), 'http://localhost:9999');
   assert.equal(normalizeStashUrl('https://stash.example.com/'), 'https://stash.example.com');
 });
+
+test('config snippet quotes YAML-ambiguous values', () => {
+  const s = configSnippet([{ name: 'My Source', url: 'https://x/a #b/index.yml', slug: 'my-source' }]);
+  assert.match(s, /name: "My Source"/);
+  assert.match(s, /url: "https:\/\/x\/a #b\/index.yml"/);
+});

@@ -64,10 +64,11 @@ export function configSnippet(sources: SourceRef[]): string {
   const seen = new Set<string>();
   const items = sources
     .filter((s) => !seen.has(s.url) && seen.add(s.url))
-    .map((s) => `    - name: ${yamlScalar(s.name)}\n      url: ${s.url}\n      local_path: ${s.slug}`);
+    .map((s) => `    - name: ${yamlScalar(s.name)}\n      url: ${yamlScalar(s.url)}\n      local_path: ${yamlScalar(s.slug)}`);
   return `plugins:\n  package_sources:\n${items.join('\n')}`;
 }
 
+/** Plain YAML scalar when unambiguous (no spaces, no leading indicator), else JSON-quoted. */
 function yamlScalar(s: string) {
-  return /^[\w./ -]+$/.test(s) && !/^\s|\s$/.test(s) ? s : JSON.stringify(s);
+  return /^[A-Za-z0-9_.\/+-][\w.\/:~%?&=+@#-]*$/.test(s) && !/:$/.test(s) ? s : JSON.stringify(s);
 }

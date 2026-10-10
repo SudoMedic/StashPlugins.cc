@@ -110,3 +110,7 @@ test('pickAuthor credits the main human committer', () => {
   assert.equal(loginFromEmail('someone@example.com'), undefined);
   assert.equal(pickAuthor([]), undefined);
 });
+
+test('normalizeDate accepts date-only values', () => {
+  assert.equal(normalizeDate('2025-12-20'), '2025-12-20T00:00:00.000Z');
+});

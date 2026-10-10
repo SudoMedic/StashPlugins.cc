@@ -39,6 +39,7 @@ const OVERRIDES_FILE = path.join(ROOT, 'data/overrides.json');
 const FORUM_URL = 'https://discourse.stashapp.cc/t/list-of-plugin-sources/122';
 const CONCURRENCY = Number(process.env.CONCURRENCY ?? 6);
 const README_LIMIT = 40_000;
+const ZIP_LIMIT = 8_000_000;
 
 const log = (...a) => console.error(...a);
 
@@ -157,7 +158,8 @@ async function githubMeta(r) {
 
 async function historyFor(dir, ref, folder, manifestPath) {
   const fmt = '--format=%H%x1f%aI%x1f%an%x1f%ae';
-  const folderLog = parseLog(await git(['-C', dir, 'log', fmt, ref, '--', folder || '.']));
+  // folder === null: the manifest shares the repo root with other packages, so only its own file counts.
+  const folderLog = folder === null ? [] : parseLog(await git(['-C', dir, 'log', fmt, ref, '--', folder || '.']));
   // --follow on the manifest catches history from before a folder was moved.
   let fileLog = [];
   if (manifestPath) {
@@ -169,7 +171,7 @@ async function historyFor(dir, ref, folder, manifestPath) {
   }
   const bySha = new Map();
   for (const c of [...folderLog, ...fileLog]) bySha.set(c.sha, c);
-  const commits = [...bySha.values()].sort((a, b) => b.date.localeCompare(a.date));
+  const commits = [...bySha.values()].sort((a, b) => Date.parse(b.date) - Date.parse(a.date));
   return commits;
 }
 
@@ -190,8 +192,15 @@ function absolutizeReadme(md, r, branch, folder) {
   return md
     .replace(/(!\[[^\]]*\]\()\s*<?([^)\s>]+)>?/g, (_, pre, link) => pre + resolve(link, true))
     .replace(/((?<!!)\[[^\]]*\]\()\s*<?([^)\s>]+)>?/g, (_, pre, link) => pre + resolve(link, false))
-    .replace(/(<img[^>]+src=")([^"]+)/gi, (_, pre, link) => pre + resolve(link, true));
+    .replace(/(\)\]\()\s*<?([^)\s>]+)>?/g, (_, pre, link) => pre + resolve(link, false)) // [![badge](img)](link)
+    .replace(/^(\s*\[[^\]]+\]:\s*)<?(\S+?)>?(?=\s|$)/gm, (_, pre, link) => pre + resolve(link, false)) // [ref]: link
+    .replace(/(<img[^>]+src=")([^"]+)/gi, (_, pre, link) => pre + resolve(link, true))
+    .replace(/(<a[^>]+href=")([^"]+)/gi, (_, pre, link) => pre + resolve(link, false))
+    .replace(/(<source[^>]+srcset=")([^"\s,]+)/gi, (_, pre, link) => pre + resolve(link, true));
 }
+
+const looksLikeManifest = (m) =>
+  !!m && typeof m === 'object' && !Array.isArray(m) && !!m.name && !!(m.ui || m.exec || m.tasks || m.hooks || m.interface || m.description);
 
 /** Lazily parse every manifest-looking yml in a repo, keyed by lowercase `name`. */
 async function manifestsByName(ctx) {
@@ -202,7 +211,7 @@ async function manifestsByName(ctx) {
       if (/(^|\/)\.github\//.test(p)) continue;
       try {
         const m = YAML.parse(await readBlob(ctx.dir, ctx.repo.branch, p));
-        if (m && typeof m === 'object' && !Array.isArray(m) && m.name && (m.ui || m.exec || m.tasks || m.hooks || m.interface || m.description)) {
+        if (looksLikeManifest(m)) {
           const k = String(m.name).toLowerCase();
           if (!map.has(k)) map.set(k, { path: p, manifest: m });
         }
@@ -232,20 +241,31 @@ async function manifestFromZip(pkg, indexUrl) {
   const url = new URL(pkg.path, indexUrl).href;
   const res = await fetch(url, { signal: AbortSignal.timeout(30_000) });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  const len = Number(res.headers.get('content-length') ?? 0);
-  if (len > 8_000_000) {
-    await res.body?.cancel();
-    throw new Error('zip too large');
+  const chunks = [];
+  let size = 0;
+  for await (const chunk of res.body) {
+    size += chunk.length;
+    if (size > ZIP_LIMIT) {
+      await res.body.cancel().catch(() => {});
+      throw new Error('zip too large');
+    }
+    chunks.push(chunk);
   }
-  const buf = Buffer.from(await res.arrayBuffer());
+  const buf = Buffer.concat(chunks);
   const ymls = readZipEntries(buf)
     .filter((e) => /\.ya?ml$/i.test(e.name) && !e.name.endsWith('/'))
     .sort((a, b) => a.name.split('/').length - b.name.split('/').length);
-  const want = ymls.find((e) => e.name.split('/').pop().toLowerCase().replace(/\.ya?ml$/, '') === pkg.id.toLowerCase()) ?? ymls[0];
-  if (!want) throw new Error('no manifest in zip');
-  const m = YAML.parse(extractZipEntry(buf, want).toString('utf8'));
-  if (!m?.name) throw new Error('manifest has no name');
-  return m;
+  const stem = (e) => e.name.split('/').pop().toLowerCase().replace(/\.ya?ml$/, '');
+  // Exact id match first, then any yml that looks like a plugin manifest.
+  for (const e of [...ymls.filter((e) => stem(e) === pkg.id.toLowerCase()), ...ymls.filter((e) => stem(e) !== pkg.id.toLowerCase())]) {
+    try {
+      const m = YAML.parse(extractZipEntry(buf, e).toString('utf8'));
+      if (looksLikeManifest(m)) return m;
+    } catch {
+      /* not yaml */
+    }
+  }
+  throw new Error('no manifest in zip');
 }
 
 /** Where in the repo is the index file the source URL points at? */
@@ -318,9 +338,10 @@ async function crawlPackage(pkg, ctx) {
     out.folder = folder;
     out.info = describeManifest(found.manifest);
 
-    const readmePath = paths.find(
-      (p) => path.posix.dirname(p) === (folder || '.') && /^readme(\.md|\.markdown)?$/i.test(path.posix.basename(p)),
-    );
+    const shared = !folder && !ctx.single;
+    const readmePath = shared
+      ? undefined
+      : paths.find((p) => path.posix.dirname(p) === (folder || '.') && /^readme(\.md|\.markdown)?$/i.test(path.posix.basename(p)));
     if (readmePath) {
       try {
         const md = (await readBlob(dir, ref, readmePath)).slice(0, README_LIMIT);
@@ -330,7 +351,7 @@ async function crawlPackage(pkg, ctx) {
       }
     }
     try {
-      const commits = await historyFor(dir, ref, folder, found.path || undefined);
+      const commits = await historyFor(dir, ref, shared ? null : folder, found.path || undefined);
       if (commits.length) applyHistory(out, commits);
     } catch (e) {
       log(`  ! history ${pkg.id}: ${e.message.split('\n')[0]}`);
@@ -399,6 +420,8 @@ async function crawlSource(indexUrl, overrides) {
   return src;
 }
 
+const latest = (...ds) => ds.filter(Boolean).sort((a, b) => Date.parse(b) - Date.parse(a))[0];
+
 function buildCatalog(raw) {
   const sources = [];
   const plugins = [];
@@ -456,7 +479,7 @@ function buildCatalog(raw) {
         repoUrl: repoLink,
         folderUrl,
         homepage: p.info?.url && p.info.url !== repoLink ? p.info.url : undefined,
-        updated: p.updated ?? p.date,
+        updated: latest(p.updated, p.date),
         indexDate: p.date,
         created: p.created,
         commits: p.commits,
