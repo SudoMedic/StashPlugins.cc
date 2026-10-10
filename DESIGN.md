@@ -410,6 +410,25 @@ The core task surface, shared by the dialog and the detail aside.
 ### Selection Bar
 A pill pinned bottom-center, inverted (Chalk fill, Workbench Ink text, 14px 550), holding a count, a ghost Clear and a primary "Install selected". It is the only element besides the toast that floats over content.
 
+### Motion
+Precise and machined: crisp, confident, never playful or bouncy. Tokens live on `:root` in `src/styles/global.css` and every rule sits in its marked Motion section.
+- **Easing:** `--ease-out` cubic-bezier(0.23, 1, 0.32, 1) for entrances, exits and presses; `--ease-in-out` cubic-bezier(0.77, 0, 0.175, 1) for on-screen movement; `--ease-drawer` cubic-bezier(0.32, 0.72, 0, 1) reserved for drawers. No built-in easings and no `transition: all`.
+- **Durations:** press 120ms, small UI 160ms, dialogs and entrances 200ms, exits 140ms (exits are always faster). Nothing in the UI runs longer than 300ms.
+- **Properties:** only transform-family properties (`scale`, `translate`, `rotate`), `opacity`, `clip-path` and `filter` animate. Colors, borders and focus rings change instantly.
+- **Press:** `:active` scale 0.97 (0.99 on whole cards), pointer only. Hover styles live inside `@media (hover: hover) and (pointer: fine)`.
+- **Keyboard:** `html[data-input='key']` (set by `common.ts`) turns every transition off; keyboard-initiated actions never animate.
+- **Install dialog:** opens from scale 0.96 and opacity 0 with a fading backdrop via `@starting-style`; centered origin; closes faster.
+- **Theme switch:** the page recolors in one frame (`html.theme-switching` disables transitions); only the sun and moon indicator rotates and crossfades.
+- **Copy buttons:** "Copy" and "Copied" share one grid cell and crossfade with a 2px blur, so the width never changes.
+- **Entrances:** "Show more" cascades the added cards at 40ms intervals; detail and sources sections below the fold enter once (opacity plus 12px), revealed at once on focus and always in print. Nothing is hidden before JavaScript marks it.
+- **Reduced motion:** opacity and color changes stay; every movement and scale is removed.
+
+### Cinematic Layer (home page only)
+The one exception to the 300ms rule, limited to the home hero (`src/components/Cinematic.astro`, `src/styles/cinematic.css`, `src/scripts/cinematic.ts`, GSAP 3.15.0 from npm). Depth comes from the brand's own vocabulary on six `data-depth` levels: 0 the workbench grid (hairline squares fading out from the headline), 1 a soft Signal Amber glow, 2 outlined ghost type ("Plugins", 1px Line Strong stroke, kept clear of the lede), 3 the search field with four L-shaped frame corners in Dust Grey, 4 headline, lede and stats, 5 a one-time amber hairline sweep under the search field. The cube mark is never transformed.
+- **Intro (about 1.4s):** masked line reveal on the headline, lede and stats rise 8 to 10px, stat numbers settle through a digit scramble onto their real values, the search field opens with a center clip-path wipe (cleared when done), corners draw in, the hairline sweeps and fades.
+- **Desktop, fine pointer only:** pointer parallax (4, 10 and 16px by depth), a 7s glow float paused off screen, and a scrubbed scatter as the hero scrolls out. No pins: the search field must never wait.
+- **Guard rails:** reduced motion runs nothing; touch gets the intro only; any key press finishes the intro and focus entering the hero settles it; `html.cine-pending` hides only the intro elements before paint, with a 2.5s CSS failsafe; print and no-JS show everything.
+
 ## Do's and Don'ts
 
 ### Do:
@@ -431,3 +450,4 @@ A pill pinned bottom-center, inverted (Chalk fill, Workbench Ink text, 14px 550)
 - **Don't** pill-shape buttons in page content; pills are for chips, tags, people and floating feedback.
 - **Don't** border text fields or selects with the hairline; use the control-line tone.
 - **Don't** set small amber text with `--accent`; use `--accent-text` so it holds contrast in the light theme.
+- **Don't** animate keyboard-initiated actions, show hover effects outside fine pointers, or run UI motion past 300ms outside the home page's cinematic layer.

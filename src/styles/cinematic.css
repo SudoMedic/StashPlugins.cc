@@ -42,10 +42,10 @@
   .cine-glow {
     position: absolute;
     left: 50%;
-    top: 40px;
-    width: min(560px, 90vw);
+    top: 0;
+    width: min(460px, 90vw);
     aspect-ratio: 1;
-    margin-left: calc(min(560px, 90vw) / -2);
+    margin-left: calc(min(460px, 90vw) / -2);
     border-radius: 50%;
     background: radial-gradient(circle, color-mix(in srgb, var(--accent) 16%, transparent) 0%, transparent 65%);
   }
@@ -57,9 +57,9 @@
   .cine-ghost {
     position: absolute;
     left: 50%;
-    top: 18px;
+    top: 6px;
     translate: -50% 0;
-    font-size: clamp(110px, 17vw, 240px);
+    font-size: clamp(92px, 12.5vw, 176px);
     font-weight: 800;
     line-height: 1;
     letter-spacing: -0.02em;
