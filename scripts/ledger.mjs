@@ -340,7 +340,9 @@ async function evaluate(pr) {
     ? errors[0]
     : t.vetoes.length && t.state === 'failure'
       ? `Changes requested by ${t.vetoes.join(', ')}`
-      : `${t.approvers.length}/${t.required} approvals from verified reviewers${pr.draft ? ' (draft)' : ''}`;
+      : t.required === 0
+        ? `No approvals required: no other eligible reviewers yet${pr.draft ? ' (draft)' : ''}`
+        : `${t.approvers.length}/${t.required} approvals from verified reviewers${pr.draft ? ' (draft)' : ''}`;
   return { pr, headSha, state, description: description.slice(0, 139), errors, warnings, tally: t, kinds: change.kinds, entries: change.newEntries };
 }
 
