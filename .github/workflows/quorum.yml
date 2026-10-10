@@ -1,0 +1,52 @@
+name: Community quorum
+
+# Counts reviewer votes on every open pull request and posts the
+# `community-quorum` commit status. Make that status required on `main`
+# (see GOVERNANCE.md) so nothing merges without enough independent approvals.
+#
+# Runs from the default branch only (pull_request_target / workflow_run /
+# schedule), so a pull request can't change the rules or the counter that
+# judge it. Pull request content is read with `git show` as data and never
+# checked out or executed.
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, edited, ready_for_review, converted_to_draft]
+  workflow_run:
+    workflows: [Review submitted]
+    types: [completed]
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: Pull request number (blank for every open pull request)
+        required: false
+
+permissions:
+  contents: read
+  pull-requests: read
+  statuses: write
+
+concurrency:
+  group: quorum-${{ github.event.pull_request.number || 'all' }}
+  cancel-in-progress: true
+
+jobs:
+  count-votes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Count votes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ github.event.pull_request.number || inputs.pr }}
+        run: node scripts/ledger.mjs check-prs ${PR:+--pr "$PR"}

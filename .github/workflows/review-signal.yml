@@ -1,0 +1,17 @@
+name: Review submitted
+
+# Reviews on fork pull requests only get a read-only token, so this workflow
+# does nothing except wake up "Community quorum", which recounts with the
+# default branch's code and permissions.
+
+on:
+  pull_request_review:
+    types: [submitted, edited, dismissed]
+
+permissions: {}
+
+jobs:
+  signal:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Review on pull request ${{ github.event.pull_request.number }}; Community quorum will recount."
