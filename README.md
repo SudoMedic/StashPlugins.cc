@@ -7,6 +7,25 @@ In Stash, a plugin source has to be added before its plugins can be browsed, and
 This site indexes all ~90 community sources in one place. Plugins can be searched, filtered by type or source, sorted
 by date or name, and installed with a generated snippet.
 
+## How it works
+
+1. **Collect.** Once a day, the crawler reads every source on the community list, plus sources added through the
+   ledger. It downloads each source's `index.yml` (the same file Stash reads), then reads each plugin's manifest,
+   README and git history from its repository.
+2. **Check.** Each package's SHA-256 hash from the index is compared with the community review ledger,
+   `registry/ledger.jsonl`. A plugin is shown as community verified when reviewers have approved that exact hash,
+   changed since review when only an earlier version was approved, not reviewed yet, or revoked.
+3. **Review.** Changes to the ledger are made by pull request. Each pull request needs approvals from registered
+   reviewers other than its author, and the number required depends on the type of change. A GitHub Actions workflow
+   counts the approvals and reports the result as a required status check. Each ledger entry records the hash of the
+   previous entry, so earlier decisions cannot be altered without invalidating the ledger.
+4. **Publish.** The site is built as static pages and deployed to GitHub Pages. Revoked plugins are left out of
+   search and their install instructions are disabled. Removed sources are dropped from the site.
+5. **Install.** Each plugin page generates install instructions for the Stash UI, GraphQL, cURL and `config.yml`.
+   Stash checks the downloaded package against the same SHA-256 hash before installing it.
+
+See [GOVERNANCE.md](GOVERNANCE.md) for the full review process.
+
 ## What each plugin shows
 
 | Field | Where it comes from |
