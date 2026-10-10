@@ -2,7 +2,8 @@
 // Builds src/data/catalog.json from every package source on the Stash forum list.
 //
 //   1. Read the source list from discourse.stashapp.cc (falls back to the last
-//      saved list when the forum is unreachable).
+//      saved list when the forum is unreachable), plus sources the community
+//      ledger added, minus the ones it removed.
 //   2. Download each source's index.yml — the same file Stash reads.
 //   3. Clone the repo behind each source (blobs > 256k skipped) and, for every
 //      package, find its manifest, README and git history.
@@ -15,6 +16,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { promisify } from 'node:util';
 import YAML from 'yaml';
+import { parseLedger, verifyLedger } from './lib/ledger.mjs';
 import { extractZipEntry, readZipEntries } from './lib/zip.mjs';
 import {
   classify,
@@ -36,6 +38,7 @@ const CACHE = path.resolve(ROOT, process.env.CACHE_DIR ?? '.cache');
 const OUT = path.join(ROOT, 'src/data/catalog.json');
 const SOURCES_FILE = path.join(ROOT, 'data/sources.json');
 const OVERRIDES_FILE = path.join(ROOT, 'data/overrides.json');
+const LEDGER_FILE = path.join(ROOT, 'registry/ledger.jsonl');
 const FORUM_URL = 'https://discourse.stashapp.cc/t/list-of-plugin-sources/122';
 const CONCURRENCY = Number(process.env.CONCURRENCY ?? 6);
 const README_LIMIT = 40_000;
@@ -469,6 +472,7 @@ function buildCatalog(raw) {
         name: p.name,
         description: p.description ?? p.info?.description,
         version: p.version ?? p.info?.version,
+        sha256: p.sha256,
         type,
         tags: p.info?.tags ?? [],
         runtime: p.info?.runtime,
@@ -510,8 +514,11 @@ function buildCatalog(raw) {
 
 async function main() {
   const overrides = existsSync(OVERRIDES_FILE) ? JSON.parse(await readFile(OVERRIDES_FILE, 'utf8')) : {};
+  const ledger = verifyLedger(parseLedger(await readFile(LEDGER_FILE, 'utf8')));
+  if (!ledger.ok) throw new Error(`registry ledger is invalid:\n  ${ledger.errors.join('\n  ')}`);
   let urls = await loadSourceUrls();
-  for (const extra of overrides.$extraSources ?? []) if (!urls.includes(extra)) urls.push(extra);
+  for (const extra of [...(overrides.$extraSources ?? []), ...ledger.state.addedSources.keys()]) if (!urls.includes(extra)) urls.push(extra);
+  urls = urls.filter((u) => !ledger.state.removedSources.has(u));
   if (process.env.ONLY) urls = urls.filter((u) => u.includes(process.env.ONLY));
   log(`${urls.length} sources`);
 

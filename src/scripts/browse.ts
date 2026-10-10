@@ -12,6 +12,7 @@ const q = $<HTMLInputElement>('q');
 const sourceSel = $<HTMLSelectElement>('source');
 const sortSel = $<HTMLSelectElement>('sort');
 const allBox = $<HTMLInputElement>('all');
+const verifiedBox = $<HTMLInputElement>('verified');
 const grid = $('grid');
 const countEl = $('count');
 const emptyEl = $('empty');
@@ -33,6 +34,7 @@ function readUrl() {
   type = p.get('type') ?? '';
   sourceSel.value = p.get('source') ?? '';
   allBox.checked = p.get('all') === '1' || !!sourceSel.value;
+  verifiedBox.checked = p.get('verified') === '1';
   const sort = p.get('sort');
   sortTouched = !!sort;
   sortSel.value = sort ?? (q.value ? 'relevance' : 'updated');
@@ -44,6 +46,7 @@ function writeUrl() {
   if (type) p.set('type', type);
   if (sourceSel.value) p.set('source', sourceSel.value);
   if (allBox.checked && !sourceSel.value) p.set('all', '1');
+  if (verifiedBox.checked) p.set('verified', '1');
   if (sortTouched) p.set('sort', sortSel.value);
   const s = p.toString();
   history.replaceState(null, '', s ? `?${s}` : location.pathname);
@@ -96,6 +99,7 @@ function compute() {
   for (const x of indexed) {
     if (!showAll && !x.item.can) continue;
     if (src && x.item.src !== src) continue;
+    if (verifiedBox.checked && x.item.rv !== 'verified') continue;
     const s = tokens.length ? score(x, tokens) : 1;
     if (s) matches.push({ item: x.item, s });
   }
@@ -212,6 +216,7 @@ q.addEventListener('input', () => {
 });
 sourceSel.addEventListener('change', update);
 allBox.addEventListener('change', update);
+verifiedBox.addEventListener('change', update);
 sortSel.addEventListener('change', () => {
   sortTouched = true;
   update();
@@ -231,6 +236,7 @@ $('reset').addEventListener('click', () => {
   type = '';
   sourceSel.value = '';
   allBox.checked = false;
+  verifiedBox.checked = false;
   sortTouched = false;
   sortSel.value = 'updated';
   update();
@@ -264,7 +270,7 @@ fetch(`${base}plugins.json`)
       id: norm(item.i),
       desc: norm(item.d),
       author: norm(item.a.name + ' ' + (item.a.login ?? '')),
-      rest: norm([item.sn, item.r, item.t, ...item.g].join(' ')),
+      rest: norm([item.sn, item.r, item.t, item.rv === 'verified' ? 'verified' : '', ...item.g].join(' ')),
     }));
     // Drop picks that no longer exist.
     for (const s of picked) if (!bySlug.has(s)) picked.delete(s);

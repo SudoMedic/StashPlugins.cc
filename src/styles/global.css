@@ -270,6 +270,13 @@ h3 {
   font-size: 18px;
   margin-right: 6px;
 }
+.stats a {
+  color: inherit;
+  text-decoration: none;
+}
+.stats a strong {
+  color: var(--ok);
+}
 
 .search {
   position: relative;
@@ -517,6 +524,55 @@ kbd {
 .tag-dup {
   color: var(--text-3);
   border-style: dashed;
+}
+.tag-verified {
+  color: var(--ok);
+  border-color: color-mix(in srgb, var(--ok) 45%, transparent);
+  background: color-mix(in srgb, var(--ok) 10%, transparent);
+}
+.tag-changed {
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+}
+.tag-revoked {
+  color: var(--err);
+  border-color: color-mix(in srgb, var(--err) 45%, transparent);
+}
+.review-box {
+  margin: 18px 0 4px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-left-width: 3px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-raised);
+  font-size: 14px;
+  color: var(--text-2);
+}
+.review-box strong {
+  color: var(--text);
+}
+.review-box p {
+  margin: 4px 0 0;
+}
+.review-verified {
+  border-left-color: var(--ok);
+}
+.review-changed {
+  border-left-color: var(--accent);
+}
+.review-unreviewed {
+  border-left-color: var(--line-strong);
+}
+.review-revoked {
+  border-left-color: var(--err);
+}
+.hash {
+  font-family: var(--mono);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.ledger td {
+  vertical-align: top;
 }
 .card-meta {
   display: grid;

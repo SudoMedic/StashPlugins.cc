@@ -49,6 +49,8 @@ export function cardHtml(p: ListItem, base: string, opts: { selected?: boolean; 
   const href = `${base}plugins/${p.s}/`;
   const av = avatar(p.a.login, 40);
   const tags = [
+    p.rv === 'verified' ? `<span class="tag tag-verified" title="This exact version was approved by community reviewers">✓ Verified</span>` : '',
+    p.rv === 'changed' ? `<span class="tag tag-changed" title="An earlier version was approved; this one has not been reviewed yet">Changed since review</span>` : '',
     `<span class="tag tag-${p.t}">${TYPE_SHORT[p.t]}</span>`,
     p.r ? `<span class="tag">${esc(p.r)}</span>` : '',
     p.g.includes('settings') ? `<span class="tag">Settings</span>` : '',

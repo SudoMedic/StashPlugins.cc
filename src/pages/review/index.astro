@@ -1,0 +1,172 @@
+---
+import Base from '../../layouts/Base.astro';
+import { catalog, governance, isCanonical, ledger, listed, type LedgerEntry } from '../../lib/catalog';
+import { avatar, shortDate } from '../../lib/render';
+
+const base = import.meta.env.BASE_URL;
+const repo = `https://github.com/${process.env.GITHUB_REPOSITORY ?? 'SudoMedic/StashPlugins.cc'}`;
+const q = governance.quorum;
+const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
+
+const changed = listed.filter((p) => p.review.status === 'changed');
+const verified = listed.filter((p) => p.review.status === 'verified');
+const unreviewed = listed.filter((p) => p.review.status === 'unreviewed' && isCanonical(p));
+const pluginFor = (source: string | undefined, id: string) => catalog.plugins.find((p) => p.sourceUrl === source && p.id.toLowerCase() === id.toLowerCase());
+
+const TITLES: Record<string, string> = {
+  genesis: 'Ledger started',
+  approve: 'Approved',
+  revoke: 'Revoked',
+  'add-source': 'Source added',
+  'remove-source': 'Source removed',
+  'add-reviewer': 'Reviewer added',
+  'remove-reviewer': 'Reviewer removed',
+};
+const entries: LedgerEntry[] = [...ledger.entries].reverse();
+---
+
+<Base title="Community review — StashPlugins" description="How StashPlugins uses community votes and a public, hash-chained ledger to keep malicious plugins and spam out." nav="review">
+  <div class="wrap" style="max-width:900px">
+    <header class="page-head">
+      <h1>Community review</h1>
+      <p>
+        Nobody owns this list. Every approval, takedown and new reviewer is a vote by several independent people, recorded in a public ledger that anyone can copy and check.
+        {verified.length} of {listed.length} listed plugins are community verified.
+      </p>
+    </header>
+
+    <div class="prose">
+      <h2>How it works</h2>
+      <ol>
+        <li>
+          <strong>Propose.</strong> Anyone with a GitHub account older than {governance.proposer.minAccountAgeDays} days opens a pull request that appends one entry to
+          <a href={`${repo}/blob/main/registry/ledger.jsonl`}><code>registry/ledger.jsonl</code></a>, for example <code>npm run ledger -- approve &lt;plugin&gt; --by &lt;you&gt;</code>.
+        </li>
+        <li>
+          <strong>Vote.</strong> Registered reviewers read the code (<code>npm run ledger -- inspect &lt;plugin&gt;</code> downloads and unpacks the exact zip) and approve or request changes on the pull request.
+        </li>
+        <li>
+          <strong>Count.</strong> A check counts approvals on the latest commit from reviewers whose GitHub accounts are at least {governance.reviewer.minAccountAgeDays} days old. Your own pull request and plugins from a
+          repo you own never count. {governance.vetoes === 1 ? 'A single request for changes' : `${governance.vetoes} requests for changes`} from a reviewer blocks it.
+        </li>
+        <li><strong>Record.</strong> Once merged, the entry is sealed into the chain. The site updates on the next build.</li>
+      </ol>
+
+      <h2>Votes needed</h2>
+      <table>
+        <thead><tr><th>Change</th><th>Approvals</th></tr></thead>
+        <tbody>
+          <tr><td>Approve a plugin version</td><td>{q.approve}</td></tr>
+          <tr><td>Revoke a plugin (malware, abuse)</td><td>{q.revoke}</td></tr>
+          <tr><td>Add a source</td><td>{q['add-source']}</td></tr>
+          <tr><td>Remove a source (spam)</td><td>{q['remove-source']}</td></tr>
+          <tr><td>Add or remove a reviewer</td><td>{q['add-reviewer']} / {q['remove-reviewer']}</td></tr>
+          <tr><td>Change the site's code</td><td>{q.code}</td></tr>
+          <tr><td>Change these rules or the vote counter</td><td>{q.governance}</td></tr>
+        </tbody>
+      </table>
+      <p>
+        Every change needs at least two people: the one proposing it and someone else approving it. While there are fewer reviewers than a quorum, every eligible reviewer must approve. The numbers live in
+        <a href={`${repo}/blob/main/registry/governance.json`}><code>registry/governance.json</code></a>, and changing them takes {q.governance} approvals.
+      </p>
+
+      <h2>What "verified" means</h2>
+      <p>
+        An approval pins the SHA-256 of each package zip, the same hash Stash checks when it installs. If the author publishes new code, the hash changes and the plugin shows
+        <em>Changed since review</em> until reviewers approve the new version. A <em>revoke</em> hides a plugin and its install snippets right away, and it keeps them hidden until a new version is approved.
+      </p>
+
+      <h2>Why it's like a blockchain</h2>
+      <p>
+        Each ledger entry includes the hash of the entry before it. Editing or deleting any past decision changes its hash and breaks every entry after it, so tampering is obvious to anyone holding a copy.
+        Every fork of the repo is a full copy. There are no tokens and no mining. A vote is a signed-in GitHub review, so it's one person, one vote, and no one can buy their way in.
+      </p>
+      <p>
+        Current head: <span class="hash">{ledger.head}</span><br />
+        Check it yourself: download <a href={`${base}ledger.jsonl`}>ledger.jsonl</a> and run <code>npm run ledger -- verify ledger.jsonl</code> from a clone of this repo.
+      </p>
+
+      <h2>Reviewers ({ledger.reviewers.length})</h2>
+      <div class="people">
+        {
+          ledger.reviewers.map((r) => (
+            <a class="person" href={`https://github.com/${r.login}`} target="_blank" rel="noopener">
+              <img src={avatar(r.login, 44)} alt="" width="22" height="22" loading="lazy" />
+              <span>{r.login}</span>
+            </a>
+          ))
+        }
+      </div>
+      <p>
+        Want to help? Open a pull request with <code>npm run ledger -- add-reviewer &lt;your-login&gt; --by &lt;your-login&gt;</code> and say what you'd review. Existing reviewers vote on it.
+      </p>
+
+      <h2>Needs review</h2>
+      {
+        changed.length > 0 ? (
+          <>
+            <p>These plugins were approved before, but their sources now serve new code:</p>
+            <ul>
+              {changed.map((p) => (
+                <li>
+                  <a href={`${base}plugins/${p.slug}/`}>{p.name}</a> <span class="muted">({p.sourceName}) approved {p.review.version ?? '—'}, now {p.version ?? '—'}</span>
+                </li>
+              ))}
+            </ul>
+          </>
+        ) : (
+          <p>No approved plugins have changed since review.</p>
+        )
+      }
+      <p>
+        {plural(unreviewed.length, 'plugin')} have never been reviewed. <a href={`${base}?sort=updated`}>Browse them</a>, pick one you use, and propose an approval.
+      </p>
+
+      <h2 id="ledger">Ledger</h2>
+    </div>
+    <div class="table-wrap">
+      <table class="sources ledger">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Decision</th>
+            <th scope="col">Proposed by</th>
+            <th scope="col">Date</th>
+            <th scope="col">Hash</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            entries.map((e) => (
+              <tr id={`entry-${e.seq}`}>
+                <td>{e.seq}</td>
+                <td>
+                  <strong>{TITLES[e.type] ?? e.type}</strong>
+                  {e.type === 'genesis' && <span> with reviewers {e.reviewers?.join(', ')}</span>}
+                  {(e.type === 'add-reviewer' || e.type === 'remove-reviewer') && <span> {e.login}</span>}
+                  {(e.type === 'add-source' || e.type === 'remove-source') && <span> <code>{e.source}</code></span>}
+                  {e.packages && (
+                    <ul class="kv" style="margin:4px 0 0">
+                      {e.packages.map((pkg) => {
+                        const p = pluginFor(e.source, pkg.id);
+                        return (
+                          <li>
+                            {p ? <a href={`${base}plugins/${p.slug}/`}>{p.name}</a> : <code>{pkg.id}</code>} {pkg.version && <span class="muted">{pkg.version}</span>}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  )}
+                  {(e.reason || e.note) && <div class="muted">{e.reason ?? e.note}</div>}
+                </td>
+                <td>{e.by ?? '—'}</td>
+                <td>{shortDate(e.at)}</td>
+                <td class="hash" title={e.hash}>{e.hash.slice(0, 12)}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</Base>
